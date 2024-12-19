@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/textPage">
+
+    <!-- Toolbar with header text -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:title="@string/app_toolbar_title"
+        android:background="@color/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <!-- Main content area -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="@color/fragmentBackground">
+
+        <!-- Animated text for the slogan -->
+        <TextView
+            android:id="@+id/tv_animated_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="24dp"
+            android:text="@string/app_slogan"
+            android:textSize="18sp"
+            android:textColor="@color/textHighlight"
+            android:gravity="center" />
+
+        <!-- Primary action: Add Watermark button -->
+        <Button
+            android:id="@+id/btn_add_watermark"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/add_watermark_button"
+            android:backgroundTint="@color/buttonPrimary"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Secondary action: Combine PDFs button -->
+        <Button
+            android:id="@+id/btn_combine_pdfs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/combine_pdfs_button"
+            android:backgroundTint="@color/buttonSecondary"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Secondary action: Convert Images to PDF button -->
+        <Button
+            android:id="@+id/btn_convert_to_pdf"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/convert_to_pdf_button"
+            android:backgroundTint="@color/buttonSecondary"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="8dp" />
+    </LinearLayout>
+
+    <!-- Bottom navigation -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:menu="@menu/bottom_nav_menu"
+        android:background="@color/colorPrimary"
+        app:itemIconTint="@color/buttonHighlightPrimary"
+        app:itemTextColor="@color/buttonHighlightPrimary" />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

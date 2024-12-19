@@ -1,6 +1,9 @@
 <resources>
-    <string name="app_name">CVOR App</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="app_name">CVOR</string>
+    <string name="app_toolbar_title">Welcome to CVOR</string>
+    <string name="app_slogan">CVOR - Making your data secure</string>
+    <string name="add_watermark_button">Add Watermark and Share File</string>
+    <string name="combine_pdfs_button">Combine PDFs</string>
+    <string name="convert_to_pdf_button">Convert Images to PDF</string>
+    <string name="learn_more">Learn More</string>
 </resources>
