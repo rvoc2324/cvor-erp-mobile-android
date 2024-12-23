@@ -12,7 +12,7 @@
     <color name="buttonHighlightSecondary">#77AAFF</color>
 
     <!-- Text Colors -->
-    <color name="textPage">#F8F9FA</color>
+    <color name="text">#F8F9FA</color>
     <color name="textHighlight">#D4EDE8</color>
 
     <!-- Input Box and Border Colors -->

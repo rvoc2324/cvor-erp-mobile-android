@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:startDestination="@id/homeActivity">
+
+    <!-- HomeActivity -->
+    <activity
+        android:id="@+id/homeActivity"
+        android:name="com.example.cvorapp.ui.activities.home.HomeActivity"
+        android:label="Home" />
+
+    <!-- CoreActivity -->
+    <activity
+        android:id="@+id/coreActivity"
+        android:name="com.example.cvorapp.ui.activities.core.CoreActivity">
+        <argument
+            android:name="actionType"
+            app:argType="string" />
+    </activity>
+
+    <!-- Navigation Actions -->
+    <action
+        android:id="@+id/action_home_to_coreActivity_watermark"
+        app:destination="@id/coreActivity">
+        <argument
+            android:name="actionType"
+            android:value="addwatermark" />
+    </action>
+
+    <action
+        android:id="@+id/action_home_to_coreActivity_combine"
+        app:destination="@id/coreActivity">
+        <argument
+            android:name="actionType"
+            android:value="combinepdf" />
+    </action>
+
+    <action
+        android:id="@+id/action_home_to_coreActivity_convert"
+        app:destination="@id/coreActivity">
+        <argument
+            android:name="actionType"
+            android:value="convertpdf" />
+    </action>
+
+    <!-- Learn More Activity: Displays additional app information -->
+    <activity
+        android:id="@+id/learnMoreActivity"
+        android:name="com.example.cvorapp.ui.activities.learnmore.LearnMoreActivity"
+        android:label="Learn More Activity" />
+</navigation>

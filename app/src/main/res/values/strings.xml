@@ -5,5 +5,13 @@
     <string name="add_watermark_button">Add Watermark and Share File</string>
     <string name="combine_pdfs_button">Combine PDFs</string>
     <string name="convert_to_pdf_button">Convert Images to PDF</string>
-    <string name="learn_more">Learn More</string>
+    <string name="learn_more">Learn more</string>
+    <string name="image_preview">Preview image</string>
+    <string name="capture">Capture</string>
+    <string name="retake">Retake</string>
+    <string name="confirm">Confirm</string>
+    <string name="flash_off">Flash off</string>
+    <string name="flash_on">Flash on</string>
+    <string name="use_camera">Camera</string>
+    <string name="use_file_manager">Select file</string>
 </resources>

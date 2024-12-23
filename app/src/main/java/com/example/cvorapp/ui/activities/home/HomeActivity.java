@@ -1,25 +1,26 @@
 package com.example.cvorapp.ui.activities.home;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
 
 import com.example.cvorapp.R;
-import com.example.cvorapp.ui.activities.core.CoreActivity;
-import com.example.cvorapp.ui.activities.learnmore.LearnMoreActivity;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class HomeActivity extends AppCompatActivity {
     // Declare UI components
     private Button btnAddWatermark, btnCombinePDFs, btnConvertToPDF;
     private TextView tvAnimatedText;
-    private View bottomNavigationView;
-    
+    private BottomNavigationView bottomNavigationView;
+    private NavController navController;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,6 +28,9 @@ public class HomeActivity extends AppCompatActivity {
 
         // Initialize and set up the UI components
         initUIComponents();
+
+        // Set up the NavController
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment_home);
 
         // Set click listeners for buttons
         setupActionButtons();
@@ -45,7 +49,7 @@ public class HomeActivity extends AppCompatActivity {
             btnCombinePDFs = findViewById(R.id.btn_combine_pdfs);
             btnConvertToPDF = findViewById(R.id.btn_convert_to_pdf);
             tvAnimatedText = findViewById(R.id.tv_animated_text);
-            bottomNavigationView = findViewById(R.id.bottom_navigation); // Ensure the ID matches the XML file
+            bottomNavigationView = findViewById(R.id.bottom_navigation);
         } catch (Exception e) {
             Toast.makeText(this, "Error initializing components: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
@@ -53,19 +57,21 @@ public class HomeActivity extends AppCompatActivity {
 
     // Set up button click listeners
     private void setupActionButtons() {
-        btnAddWatermark.setOnClickListener(view -> navigateToCoreActivity("watermark"));
-        btnCombinePDFs.setOnClickListener(view -> navigateToCoreActivity("combine"));
-        btnConvertToPDF.setOnClickListener(view -> navigateToCoreActivity("convert"));
+        btnAddWatermark.setOnClickListener(view -> navigateToAction(R.id.action_home_to_coreActivity_watermark));
+        btnCombinePDFs.setOnClickListener(view -> navigateToAction(R.id.action_home_to_coreActivity_combine));
+        btnConvertToPDF.setOnClickListener(view -> navigateToAction(R.id.action_home_to_coreActivity_convert));
     }
 
-    // Utility method to navigate to CoreActivity with an action type
-    private void navigateToCoreActivity(String actionType) {
+    // Navigate using the Navigation Component
+    private void navigateToAction(int actionId) {
         try {
-            Intent intent = new Intent(HomeActivity.this, CoreActivity.class);
-            intent.putExtra("actionType", actionType);
-            startActivity(intent);
+            if (navController != null) {
+                navController.navigate(actionId);
+            } else {
+                Toast.makeText(this, "Navigation Controller not initialized", Toast.LENGTH_SHORT).show();
+            }
         } catch (Exception e) {
-            Toast.makeText(this, "Failed to navigate to Core Activity", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Failed to navigate: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -84,13 +90,8 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void setupBottomNavigation() {
-        bottomNavigationView.setOnClickListener(item -> {
-            if (item.getItemId() == R.id.nav_learn_more) {
-                Intent intent = new Intent(this, LearnMoreActivity.class);
-                startActivity(intent);
-                return true;
-            }
-            return false;
-        });
+        if (navController != null) {
+            NavigationUI.setupWithNavController(bottomNavigationView, navController);
+        }
     }
 }

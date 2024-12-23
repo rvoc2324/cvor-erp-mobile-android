@@ -1,37 +1,67 @@
-package com.example.cvorapp;
+package com.example.cvorapp.ui.activities.core;
 
 import android.os.Bundle;
+import android.widget.Toast;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.example.cvorapp.databinding.ActivityMainBinding;
+import com.example.cvorapp.R;
+import com.example.cvorapp.viewmodels.CoreViewModel;
 
-public class MainActivity extends AppCompatActivity {
+public class CoreActivity extends AppCompatActivity {
 
-    private ActivityMainBinding binding;
+    private CoreViewModel coreViewModel;
+    private NavController navController;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_core);
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        // Initialize the ViewModel
+        coreViewModel = new ViewModelProvider(this).get(CoreViewModel.class);
 
-        BottomNavigationView navView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications)
-                .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
+        // Retrieve actionType passed from HomeActivity
+        String actionType = getIntent().getStringExtra("actionType");
+        if (actionType != null) {
+            coreViewModel.setActionType(actionType);
+        }
+
+        // Set up Navigation
+        NavHostFragment navHostFragment =
+                (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_core);
+        if (navHostFragment != null) {
+            navController = navHostFragment.getNavController();
+        } else {
+            Toast.makeText(this, "Error initializing navigation", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Default navigation to FileSourceFragment
+        if (savedInstanceState == null) {
+            navController.navigate(R.id.fileSourceFragment);
+        }
+
+        // Set up navigation UI
+        AppBarConfiguration appBarConfiguration =
+                new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(binding.navView, navController);
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        return navController != null && navController.navigateUp() || super.onSupportNavigateUp();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        coreViewModel.clearState(); // Clear only non-persistent states
+    }
 }

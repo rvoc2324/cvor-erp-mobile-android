@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/fileSourceFragment">
+
+    <!-- File Source Fragment: Initial state with Upload File and Take Picture options -->
+    <fragment
+        android:id="@+id/fileSourceFragment"
+        android:name="com.example.cvorapp.ui.fragments.filesource.FileSourceFragment"
+        android:label="File Source Fragment"
+        tools:layout="@layout/fragment_file_source">
+        <argument
+            android:name="actionType"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_fileSourceFragment_to_fileManagerFragment"
+            app:destination="@id/fileManagerFragment" />
+        <action
+            android:id="@+id/action_fileSourceFragment_to_cameraFragment"
+            app:destination="@id/cameraFragment" />
+    </fragment>
+
+    <!-- File Manager Fragment: Opens file picker -->
+    <fragment
+        android:id="@+id/fileManagerFragment"
+        android:name="com.example.cvorapp.ui.fragments.filesource.FileManagerFragment"
+        android:label="File Manager Fragment"
+        tools:layout="@layout/fragment_file_manager">
+        <action
+            android:id="@+id/action_fileManagerFragment_to_watermarkFragment"
+            app:destination="@id/watermarkFragment" />
+        <action
+            android:id="@+id/action_fileManagerFragment_to_combinePdfFragment"
+            app:destination="@id/combinePdfFragment" />
+        <action
+            android:id="@+id/action_fileManagerFragment_to_imageToPdfFragment"
+            app:destination="@id/imageToPdfFragment" />
+        <action
+            android:id="@+id/action_fileManagerFragment_to_fileSourceFragment"
+            app:destination="@id/fileSourceFragment" />
+    </fragment>
+
+    <!-- Camera Fragment: Captures an image -->
+    <fragment
+        android:id="@+id/cameraFragment"
+        android:name="com.example.cvorapp.ui.fragments.filesource.CameraFragment"
+        android:label="Camera Fragment"
+        tools:layout="@layout/fragment_camera">
+        <action
+            android:id="@+id/action_cameraFragment_to_watermarkFragment"
+            app:destination="@id/watermarkFragment" />
+        <action
+            android:id="@+id/action_cameraFragment_to_combinePdfFragment"
+            app:destination="@id/combinePdfFragment" />
+        <action
+            android:id="@+id/action_cameraFragment_to_imageToPdfFragment"
+            app:destination="@id/imageToPdfFragment" />
+        <action
+            android:id="@+id/action_cameraFragment_to_fileSourceFragment"
+            app:destination="@id/fileSourceFragment" />
+    </fragment>
+
+    <!-- Watermark Fragment: Displays the file/image and applies watermark -->
+    <fragment
+        android:id="@+id/watermarkFragment"
+        android:name="com.example.cvorapp.ui.fragments.watermark.WatermarkFragment"
+        android:label="Watermark Fragment"
+        tools:layout="@layout/fragment_watermark">
+        <action
+            android:id="@+id/action_watermarkFragment_to_previewFragment"
+            app:destination="@id/previewFragment" />
+        <action
+            android:id="@+id/action_watermarkFragment_to_fileSourceFragment"
+            app:destination="@id/fileSourceFragment" />
+    </fragment>
+
+    <!-- Combine PDF Fragment: Combine multiple PDFs into one -->
+    <fragment
+        android:id="@+id/combinePdfFragment"
+        android:name="com.example.cvorapp.ui.fragments.pdf.CombinePdfFragment"
+        android:label="Combine PDF Fragment"
+        tools:layout="@layout/fragment_combine_pdf">
+        <action
+            android:id="@+id/action_combinePdfFragment_to_previewFragment"
+            app:destination="@id/previewFragment" />
+        <action
+            android:id="@+id/action_combinePdfFragment_to_fileSourceFragment"
+            app:destination="@id/fileSourceFragment" />
+    </fragment>
+
+    <!-- Image to PDF Fragment: Converts images to a PDF -->
+    <fragment
+        android:id="@+id/imageToPdfFragment"
+        android:name="com.example.cvorapp.ui.fragments.pdf.ImageToPdfFragment"
+        android:label="Image to PDF Fragment"
+        tools:layout="@layout/fragment_image_to_pdf">
+        <action
+            android:id="@+id/action_imageToPdfFragment_to_previewFragment"
+            app:destination="@id/previewFragment" />
+        <action
+            android:id="@+id/action_imageToPdfFragment_to_fileSourceFragment"
+            app:destination="@id/fileSourceFragment" />
+    </fragment>
+
+    <!-- Preview Fragment: Displays watermarked image for review -->
+    <fragment
+        android:id="@+id/previewFragment"
+        android:name="com.example.cvorapp.ui.fragments.preview.PreviewFragment"
+        android:label="Preview Fragment"
+        tools:layout="@layout/fragment_preview">
+        <action
+            android:id="@+id/action_previewFragment_to_shareFragment"
+            app:destination="@id/shareFragment" />
+        <action
+            android:id="@+id/action_previewFragment_to_fileSourceFragment"
+            app:destination="@id/fileSourceFragment" />
+    </fragment>
+
+    <!-- Share Fragment: Handles sharing of watermarked image -->
+    <fragment
+        android:id="@+id/shareFragment"
+        android:name="com.example.cvorapp.ui.fragments.share.ShareFragment"
+        android:label="Share Fragment"
+        tools:layout="@layout/fragment_share">
+        <action
+            android:id="@+id/action_shareFragment_to_learnMoreActivity"
+            app:destination="@id/learnMoreActivity" />
+        <action
+            android:id="@+id/action_shareFragment_to_fileSourceFragment"
+            app:destination="@id/fileSourceFragment" />
+    </fragment>
+
+    <!-- Learn More Activity: Displays additional app information -->
+    <activity
+        android:id="@+id/learnMoreActivity"
+        android:name="com.example.cvorapp.ui.activities.learnmore.LearnMoreActivity"
+        android:label="Learn More Activity" />
+</navigation>

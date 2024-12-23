@@ -1,83 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Base application theme -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <!-- Primary branding colors -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryVariant">@color/fragmentBackground</item>
-        <item name="colorOnPrimary">@android:color/white</item>
-
-        <!-- Secondary branding colors -->
-        <item name="colorSecondary">@color/buttonSecondary</item>
-        <item name="colorSecondaryVariant">@color/buttonHighlightSecondary</item>
-        <item name="colorOnSecondary">@android:color/white</item>
-
-        <!-- Background colors -->
-        <item name="android:windowBackground">@color/textPage</item>
-        <item name="colorSurface">@color/fragmentBackground</item>
-        <item name="colorOnSurface">@color/textHighlight</item>
-
-        <!-- Text colors -->
-        <item name="android:textColorPrimary">@color/textHighlight</item>
-        <item name="android:textColorSecondary">@color/inputBox</item>
-
-        <!-- Default material components styling -->
-        <item name="materialButtonStyle">@style/Widget.AppTheme.Button</item>
+    <!-- Toolbar Style -->
+    <style name="ToolbarStyle" parent="Widget.MaterialComponents.Toolbar.Primary">
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:titleTextColor">@color/white</item>
+        <item name="android:subtitleTextColor">@color/text</item>
     </style>
 
-    <!-- Toolbar style -->
-    <style name="AppTheme.Toolbar" parent="Widget.MaterialComponents.Toolbar.Primary">
-        <item name="background">@color/colorPrimary</item>
-        <item name="titleTextColor">@android:color/white</item>
-        <item name="subtitleTextColor">@color/textHighlight</item>
+    <!-- Button Styles -->
+    <style name="PrimaryButtonStyle" parent="Widget.MaterialComponents.Button">
+        <item name="android:backgroundTint">@color/buttonPrimary</item>
+        <item name="android:textColor">@color/text</item>
     </style>
 
-    <!-- TextView styles -->
-    <style name="TextView.Slogan" parent="TextAppearance.AppCompat.Large">
-        <item name="android:textSize">18sp</item>
-        <item name="android:textColor">@color/textHighlight</item>
-        <item name="android:gravity">center</item>
+    <style name="SecondaryButtonStyle" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:backgroundTint">@color/buttonSecondary</item>
+        <item name="android:textColor">@color/text</item>
     </style>
 
-    <!-- Button styles -->
-    <style name="Widget.AppTheme.Button" parent="Widget.MaterialComponents.Button">
-        <item name="android:textColor">@android:color/white</item>
-        <item name="backgroundTint">@color/buttonPrimary</item>
-        <item name="rippleColor">@color/buttonHighlightPrimary</item>
+    <!-- Text Styles -->
+    <style name="TextStyle">
+        <item name="android:textColor">@color/text</item>
+        <item name="android:textSize">20sp</item>
+        <item name="fontFamily">sans-serif</item>
     </style>
 
-    <style name="Widget.AppTheme.Button.Secondary" parent="Widget.MaterialComponents.Button.OutlinedButton">
-        <item name="android:textColor">@color/buttonSecondary</item>
-        <item name="strokeColor">@color/buttonSecondary</item>
-        <item name="rippleColor">@color/buttonHighlightSecondary</item>
+    <style name="TextStyle.Headline">
+        <item name="android:textColor">@color/text</item>
+        <item name="android:textSize">20sp</item>
+        <item name="fontFamily">sans-serif</item>
     </style>
 
-    <!-- BottomNavigationView style -->
-    <style name="Widget.AppTheme.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView">
-        <item name="background">@color/colorPrimary</item>
-        <item name="itemIconTint">@color/buttonHighlightPrimary</item>
-        <item name="itemTextColor">@color/buttonHighlightPrimary</item>
-    </style>
-
-    <!-- Input field styles -->
-    <style name="Widget.AppTheme.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
-        <item name="boxBackgroundColor">@color/inputBox</item>
-        <item name="hintTextColor">@color/textHighlight</item>
-        <item name="android:textColor">@color/textHighlight</item>
-    </style>
-
-    <!-- Dialog styling -->
-    <style name="AppTheme.Dialog" parent="Theme.MaterialComponents.Dialog.Alert">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorOnPrimary">@android:color/white</item>
-        <item name="colorSurface">@color/fragmentBackground</item>
-    </style>
-
-    <!-- ThemeOverlay for custom toolbar -->
-    <style name="ThemeOverlay.AppTheme.Toolbar" parent="ThemeOverlay.MaterialComponents.ActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorOnPrimary">@android:color/white</item>
+    <style name="TextStyle.Body">
+        <item name="android:textColor">@color/text</item>
+        <item name="android:textSize">16sp</item>
+        <item name="fontFamily">sans-serif</item>
     </style>
 
 </resources>

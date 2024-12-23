@@ -2,7 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base App Theme -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="AppNightTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary Branding Colors -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryVariant">@color/colorPrimaryDark</item>
@@ -13,18 +13,6 @@
         <item name="android:windowBackground">@color/fragmentBackground</item>
         <item name="colorSurface">@color/inputBox</item>
 
-        <!-- Text Colors -->
-        <item name="android:textColor">@color/textPage</item>
-        <item name="android:textColorPrimary">@color/textPage</item>
-        <item name="android:textColorSecondary">@color/buttonSecondary</item>
-        <item name="android:textColorHighlight">@color/textHighlight</item>
-
-        <!-- Button and Widget Colors -->
-        <item name="colorButtonNormal">@color/buttonPrimary</item>
-        <item name="colorControlHighlight">@color/buttonHighlightSecondary</item>
-        <item name="colorControlActivated">@color/buttonPrimary</item>
-        <item name="colorControlNormal">@color/inputBox</item>
-
         <!-- Ripple Effect Colors -->
         <item name="android:colorControlHighlight">@color/buttonHighlightSecondary</item>
         <item name="android:colorControlActivated">@color/buttonHighlightPrimary</item>
@@ -33,35 +21,6 @@
         <item name="colorError">@color/buttonHighlightPrimary</item>
 
         <!-- Default Font -->
-        <item name="fontFamily">sans-serif</item>
-
-        <!-- Toolbar Styles -->
-        <item name="toolbarStyle">@style/ToolbarStyle</item>
-    </style>
-
-    <!-- Toolbar Style -->
-    <style name="ToolbarStyle">
-        <item name="android:background">@color/colorPrimary</item>
-        <item name="android:titleTextColor">@color/white</item>
-        <item name="android:subtitleTextColor">@color/white</item>
-    </style>
-
-    <!-- Button Styles -->
-    <style name="ButtonStyle" parent="Widget.MaterialComponents.Button">
-        <item name="android:backgroundTint">@color/buttonPrimary</item>
-        <item name="android:textColor">@color/white</item>
-    </style>
-
-    <!-- Text Style -->
-    <style name="TextStyle.Headline">
-        <item name="android:textColor">@color/textPage</item>
-        <item name="android:textSize">20sp</item>
-        <item name="fontFamily">sans-serif</item>
-    </style>
-
-    <style name="TextStyle.Body">
-        <item name="android:textColor">@color/textPage</item>
-        <item name="android:textSize">16sp</item>
         <item name="fontFamily">sans-serif</item>
     </style>
 
