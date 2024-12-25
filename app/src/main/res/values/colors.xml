@@ -23,6 +23,7 @@
     <color name="fragmentBackground">#1E3D58</color>
 
     <!-- Additional Common Colors -->
-    <color name="white">#FFFFFF</color>
+    <color name="white">#F8F9FA</color>
     <color name="black">#000000</color>
-</resources>
+    <color name="grey">#808080</color>
+ </resources>

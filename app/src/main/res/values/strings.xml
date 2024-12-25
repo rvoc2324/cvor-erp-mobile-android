@@ -6,12 +6,10 @@
     <string name="combine_pdfs_button">Combine PDFs</string>
     <string name="convert_to_pdf_button">Convert Images to PDF</string>
     <string name="learn_more">Learn more</string>
-    <string name="image_preview">Preview image</string>
-    <string name="capture">Capture</string>
-    <string name="retake">Retake</string>
-    <string name="confirm">Confirm</string>
-    <string name="flash_off">Flash off</string>
-    <string name="flash_on">Flash on</string>
-    <string name="use_camera">Camera</string>
     <string name="use_file_manager">Select file</string>
+    <string name="flash_toggle">Flash ON</string>
+    <string name="capture_image">Take Photo</string>
+    <string name="retake_image">Retake the photo</string>
+    <string name="confirm_image">Confirm photo</string>
+    <string name="go_back">Go back</string>
 </resources>
