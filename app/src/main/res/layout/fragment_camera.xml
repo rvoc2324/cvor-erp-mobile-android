@@ -1,94 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black">
 
-    <!-- Camera Preview Area -->
-
+    <!-- Camera Preview -->
     <androidx.camera.view.PreviewView
         android:id="@+id/cameraPreview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center" >
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="@string/camera_preview"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/controlLayout" />
 
-    </androidx.camera.view.PreviewView>
-
-    <!-- Overlay for Camera Controls -->
+    <!-- Bottom Controls -->
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="107dp"
-        android:layout_gravity="bottom"
-        android:layout_margin="0dp"
-        android:background="#EF1F1E1E"
+        android:id="@+id/controlLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="0dp">
-
-        <!-- Flash Toggle Button -->
-
-        <!-- Capture Button -->
+        android:background="#B3000000"
+        android:padding="12dp"
+        android:gravity="center"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <!-- Retake Button -->
         <ImageButton
             android:id="@+id/buttonRetake"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_margin="16dp"
-            android:layout_weight="1"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_margin="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/retake_image"
             android:src="@drawable/camera_retake"
-            android:visibility="gone"
+            android:visibility="visible"
             app:tint="@android:color/white" />
 
+        <!-- Capture Button -->
         <ImageButton
             android:id="@+id/buttonCapture"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:layout_weight="1"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_margin="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/capture_image"
             android:src="@drawable/camera_capture"
+            android:contentDescription="@string/capture_image"
             app:tint="@android:color/white" />
 
+        <!-- Confirm Button -->
         <ImageButton
             android:id="@+id/buttonConfirm"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_margin="16dp"
-            android:layout_weight="1"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_margin="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/confirm_image"
             android:src="@drawable/camera_confirm"
-            android:visibility="gone"
-            app:tint="@color/white" />
-
-        <!-- Confirm Button -->
+            android:visibility="visible"
+            app:tint="@android:color/white" />
     </LinearLayout>
 
-    <!-- Back Button (Top Left) -->
-    <ImageButton
-        android:id="@+id/buttonBack"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_gravity="top|start"
-        android:layout_margin="16dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="@string/go_back"
-        android:src="@drawable/camera_go_back"
-        android:visibility="visible"
-        app:tint="@color/white" />
-
+    <!-- Top Controls -->
     <ImageButton
         android:id="@+id/buttonFlashToggle"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_gravity="top|end"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_margin="16dp"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="@string/flash_toggle"
         android:src="@drawable/camera_flash_on"
-        app:tint="@android:color/white" />
-</FrameLayout>
+        android:contentDescription="@string/flash_toggle"
+        app:tint="@android:color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ImageButton
+        android:id="@+id/buttonBack"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_margin="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/camera_go_back"
+        android:contentDescription="@string/go_back"
+        app:tint="@android:color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

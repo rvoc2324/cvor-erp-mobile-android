@@ -5,35 +5,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 
 import com.example.cvorapp.R;
 import com.example.cvorapp.viewmodels.CoreViewModel;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 /**
- * FileSourceFragment
- * This fragment provides the user with two options for file selection:
- * 1. Using the Camera.
- * 2. Using the File Manager.
- * It sets the source type in the shared CoreViewModel and navigates to the respective fragment.
+ * FileSourceFragment serves as the modal bottom sheet to choose file source (Camera or File Manager).
  */
-public class FileSourceFragment extends Fragment {
+public class FileSourceFragment extends BottomSheetDialogFragment {
 
-    private LinearLayout cameraOption; // UI element for selecting the camera option
-    private LinearLayout fileManagerOption; // UI element for selecting the file manager option
-    private CoreViewModel coreViewModel; // Shared ViewModel for managing state
+    private LinearLayout cameraOption; // Option to select Camera
+    private LinearLayout fileManagerOption; // Option to select File Manager
+    private CoreViewModel coreViewModel; // Shared ViewModel to store the selected source type
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // Inflate the fragment layout
         return inflater.inflate(R.layout.fragment_file_source, container, false);
     }
 
@@ -44,46 +37,63 @@ public class FileSourceFragment extends Fragment {
         // Initialize ViewModel
         coreViewModel = new ViewModelProvider(requireActivity()).get(CoreViewModel.class);
 
-        // Initialize UI components
+        // Initialize the UI components
         cameraOption = view.findViewById(R.id.option_camera);
         fileManagerOption = view.findViewById(R.id.option_file_manager);
 
-        // Set click listeners for navigation
-        setupListeners(view);
+        // Setup listeners for both options
+        setupListeners();
     }
 
     /**
-     * Sets up click listeners for the camera and file manager options.
-     *
-     * @param view The root view of the fragment.
+     * Set up listeners for both options to select Camera or File Manager.
      */
-    private void setupListeners(@NonNull View view) {
-        NavController navController = Navigation.findNavController(view);
-
-        // Handle camera option click
+    private void setupListeners() {
+        // Handle camera option selection
         cameraOption.setOnClickListener(v -> {
-            try {
-                // Update source type in ViewModel
-                coreViewModel.setSourceType(CoreViewModel.SourceType.CAMERA);
-                // Navigate to CameraFragment
-                navController.navigate(R.id.action_fileSourceFragment_to_cameraFragment);
-            } catch (Exception e) {
-                // Error handling for navigation failure
-                Toast.makeText(requireContext(), "Unable to navigate to Camera", Toast.LENGTH_SHORT).show();
-            }
+            // Update the ViewModel with the selected source type
+            coreViewModel.setSourceType(CoreViewModel.SourceType.CAMERA);
+
+            // Dismiss the bottom sheet after selection
+            dismiss();
+
+            // Trigger navigation to CameraFragment (handled in CoreActivity or other observer)
+            navigateToSelectedSource();
         });
 
-        // Handle file manager option click
+        // Handle file manager option selection
         fileManagerOption.setOnClickListener(v -> {
-            try {
-                // Update source type in ViewModel
-                coreViewModel.setSourceType(CoreViewModel.SourceType.FILE_MANAGER);
-                // Navigate to FileManagerFragment
-                navController.navigate(R.id.action_fileSourceFragment_to_fileManagerFragment);
-            } catch (Exception e) {
-                // Error handling for navigation failure
-                Toast.makeText(requireContext(), "Unable to navigate to File Manager", Toast.LENGTH_SHORT).show();
-            }
+            // Update the ViewModel with the selected source type
+            coreViewModel.setSourceType(CoreViewModel.SourceType.FILE_MANAGER);
+
+            // Dismiss the bottom sheet after selection
+            dismiss();
+
+            // Trigger navigation to FileManagerFragment (handled in CoreActivity or other observer)
+            navigateToSelectedSource();
         });
+    }
+
+    /**
+     * Navigate to the appropriate fragment based on the selected source type.
+     */
+    private void navigateToSelectedSource() {
+        CoreViewModel.SourceType selectedSource = coreViewModel.getSourceType().getValue();
+        if (selectedSource != null) {
+            // Handle navigation logic based on selected source
+            if (selectedSource == CoreViewModel.SourceType.CAMERA) {
+                // Navigate to CameraFragment (or any specific fragment)
+                requireActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.nav_host_fragment_core, new CameraFragment())
+                        .addToBackStack(null)
+                        .commit();
+            } else if (selectedSource == CoreViewModel.SourceType.FILE_MANAGER) {
+                // Navigate to FileManagerFragment (or any specific fragment)
+                requireActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.nav_host_fragment_core, new FileManagerFragment())
+                        .addToBackStack(null)
+                        .commit();
+            }
+        }
     }
 }

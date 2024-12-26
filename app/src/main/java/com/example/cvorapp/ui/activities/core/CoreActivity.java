@@ -48,10 +48,32 @@ public class CoreActivity extends AppCompatActivity {
             navController.navigate(R.id.fileSourceFragment);
         }
 
+        // Observe the sourceType LiveData to handle the selection
+        coreViewModel.getSourceType().observe(this, sourceType -> {
+            if (sourceType != null) {
+                // Handle navigation based on selected source type (camera or file manager)
+                if (sourceType == CoreViewModel.SourceType.CAMERA) {
+                    // Navigate to CameraFragment
+                    navController.navigate(R.id.cameraFragment);
+                } else if (sourceType == CoreViewModel.SourceType.FILE_MANAGER) {
+                    // Navigate to FileManagerFragment
+                    navController.navigate(R.id.fileManagerFragment);
+                }
+            }
+        });
+
         // Set up navigation UI
         AppBarConfiguration appBarConfiguration =
                 new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+    }
+
+    /**
+     * Method to show the FileSourceFragment as a bottom sheet.
+     */
+    private void showFileSourceBottomSheet() {
+        FileSourceFragment fileSourceFragment = new FileSourceFragment();
+        fileSourceFragment.show(getSupportFragmentManager(), fileSourceFragment.getTag());
     }
 
     @Override

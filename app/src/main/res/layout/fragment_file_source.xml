@@ -1,59 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp" >
+    android:padding="16dp">
 
-    <!-- Option for Camera -->
-    <LinearLayout
+    <TextView
         android:id="@+id/option_camera"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@drawable/clickable_background"
-        android:padding="16dp"
-        android:layout_marginBottom="16dp"
-        android:gravity="center_vertical">
+        android:text="@string/camera_file_source"
+        android:padding="10dp"
+        android:background="?attr/selectableItemBackground" />
 
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/ic_camera"
-            android:contentDescription="@string/use_camera" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:text="@string/use_camera"
-            android:textSize="18sp"
-            android:textColor="@color/text" />
-    </LinearLayout>
-
-    <!-- Option for File Manager -->
-    <LinearLayout
+    <TextView
         android:id="@+id/option_file_manager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@drawable/clickable_background"
-        android:padding="16dp"
-        android:gravity="center_vertical">
-
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/ic_file_manager"
-            android:contentDescription="@string/use_file_manager" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:text="@string/use_file_manager"
-            android:textSize="18sp"
-            android:textColor="@color/text" />
-    </LinearLayout>
+        android:text="@string/select_file_file_source"
+        android:padding="10dp"
+        android:background="?attr/selectableItemBackground" />
 </LinearLayout>
