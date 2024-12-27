@@ -17,8 +17,8 @@
     <!-- Internet access for file sharing or updates -->
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <!-- Backward compatibility for Android 12 and below -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <!-- Backward compatibility for Android 12 and below
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> -->
 
     <!-- Required for camera intent visibility -->
     <queries>

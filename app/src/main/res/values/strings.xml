@@ -6,13 +6,14 @@
     <string name="combine_pdfs_button">Combine PDFs</string>
     <string name="convert_to_pdf_button">Convert Images to PDF</string>
     <string name="learn_more">Learn more</string>
-    <string name="use_file_manager">Select file</string>
     <string name="flash_toggle">Flash ON</string>
     <string name="capture_image">Take Photo</string>
     <string name="retake_image">Retake the photo</string>
     <string name="confirm_image">Confirm photo</string>
     <string name="go_back">Go back</string>
     <string name="camera_preview">Camera preview</string>
-    <string name="camera_file_source">Camera</string>
-    <string name="select_file_file_source">Select file</string>
+    <string name="camera_source">Camera</string>
+    <string name="select_file_source">Select file</string>
+    <string name="camera_icon_desc">Camera icon</string>
+    <string name="file_manager_icon_desc">File Manager icon</string>
 </resources>

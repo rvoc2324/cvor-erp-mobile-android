@@ -40,7 +40,7 @@
         app:destination="@id/coreActivity">
         <argument
             android:name="actionType"
-            android:value="convertpdf" />
+            android:value="converttopdf" />
     </action>
 
     <!-- Learn More Activity: Displays additional app information -->

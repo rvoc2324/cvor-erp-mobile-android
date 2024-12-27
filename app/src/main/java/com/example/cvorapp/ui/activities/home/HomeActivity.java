@@ -57,22 +57,40 @@ public class HomeActivity extends AppCompatActivity {
 
     // Set up button click listeners
     private void setupActionButtons() {
-        btnAddWatermark.setOnClickListener(view -> navigateToAction(R.id.action_home_to_coreActivity_watermark));
-        btnCombinePDFs.setOnClickListener(view -> navigateToAction(R.id.action_home_to_coreActivity_combine));
-        btnConvertToPDF.setOnClickListener(view -> navigateToAction(R.id.action_home_to_coreActivity_convert));
+        btnAddWatermark.setOnClickListener(view -> navigateToCoreActivity("addwatermark"));
+        btnCombinePDFs.setOnClickListener(view -> navigateToCoreActivity("combinepdf"));
+        btnConvertToPDF.setOnClickListener(view -> navigateToCoreActivity("converttopdf"));
     }
 
-    // Navigate using the Navigation Component
-    private void navigateToAction(int actionId) {
+    private void navigateToCoreActivity(String actionType) {
         try {
-            if (navController != null) {
-                navController.navigate(actionId);
+            // Bundle the actionType argument to pass to the CoreActivity
+            Bundle bundle = new Bundle();
+            bundle.putString("actionType", actionType);
+
+            int actionId = getActionIdForType(actionType);
+
+            if (actionId != -1) {
+                if (navController != null) {
+                    navController.navigate(actionId, bundle);
+                } else {
+                    Toast.makeText(this, "Navigation Controller not initialized", Toast.LENGTH_SHORT).show();
+                }
             } else {
-                Toast.makeText(this, "Navigation Controller not initialized", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Invalid action type: " + actionType, Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
             Toast.makeText(this, "Failed to navigate: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private int getActionIdForType(String actionType) {
+        return switch (actionType) {
+            case "addwatermark" -> R.id.action_home_to_coreActivity_watermark;
+            case "combinepdf" -> R.id.action_home_to_coreActivity_combine;
+            case "converttopdf" -> R.id.action_home_to_coreActivity_convert;
+            default -> -1;  // Invalid action type
+        };
     }
 
     // Set up animated text

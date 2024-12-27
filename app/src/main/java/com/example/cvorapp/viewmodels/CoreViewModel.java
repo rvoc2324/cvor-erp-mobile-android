@@ -25,6 +25,10 @@ public class CoreViewModel extends AndroidViewModel {
     private final MutableLiveData<File> processedFile = new MutableLiveData<>(null);
     private final MutableLiveData<String> actionType = new MutableLiveData<>("");
 
+    // Navigation events
+    private final MutableLiveData<String> navigationEvent = new MutableLiveData<>(null);
+    private final MutableLiveData<Boolean> isActionCompleted = new MutableLiveData<>(false); // Tracks action completion (e.g., watermark added, PDF combined)
+
     public CoreViewModel(@NonNull Application application) {
         super(application);
     }
@@ -65,6 +69,24 @@ public class CoreViewModel extends AndroidViewModel {
         return processedFile;
     }
 
+    // Navigation Events
+    public void setNavigationEvent(String event) {
+        navigationEvent.setValue(event);
+    }
+
+    public LiveData<String> getNavigationEvent() {
+        return navigationEvent;
+    }
+
+    // Action Completion
+    public void setActionCompleted(boolean completed) {
+        isActionCompleted.setValue(completed);
+    }
+
+    public LiveData<Boolean> isActionCompleted() {
+        return isActionCompleted;
+    }
+
     // Utility Methods
     public boolean isActionTypeSet() {
         return actionType.getValue() != null && !actionType.getValue().isEmpty();
@@ -79,5 +101,7 @@ public class CoreViewModel extends AndroidViewModel {
         sourceType.setValue(null);
         selectedFileUri.setValue(null);
         processedFile.setValue(null);
+        navigationEvent.setValue(null);
+        isActionCompleted.setValue(false);
     }
 }

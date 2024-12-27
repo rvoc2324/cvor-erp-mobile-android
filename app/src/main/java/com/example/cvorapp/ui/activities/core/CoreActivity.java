@@ -1,18 +1,16 @@
 package com.example.cvorapp.ui.activities.core;
 
 import android.os.Bundle;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
-import androidx.navigation.fragment.NavHostFragment;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
+import androidx.navigation.Navigation;
 
 import com.example.cvorapp.R;
 import com.example.cvorapp.viewmodels.CoreViewModel;
+import com.example.cvorapp.ui.fragments.filesource.FileSourceFragment;
 
 public class CoreActivity extends AppCompatActivity {
 
@@ -24,48 +22,40 @@ public class CoreActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_core);
 
-        // Initialize the ViewModel
+        // Initialize ViewModel
         coreViewModel = new ViewModelProvider(this).get(CoreViewModel.class);
 
-        // Retrieve actionType passed from HomeActivity
+        // Get the actionType from intent extras
         String actionType = getIntent().getStringExtra("actionType");
         if (actionType != null) {
-            coreViewModel.setActionType(actionType);
+            coreViewModel.setActionType(actionType);  // Set the action type in ViewModel
         }
 
-        // Set up Navigation
-        NavHostFragment navHostFragment =
-                (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_core);
-        if (navHostFragment != null) {
-            navController = navHostFragment.getNavController();
-        } else {
-            Toast.makeText(this, "Error initializing navigation", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        // Initialize the NavController for fragment navigation
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment_core);
 
-        // Default navigation to FileSourceFragment
         if (savedInstanceState == null) {
-            navController.navigate(R.id.fileSourceFragment);
+            showFileSourceBottomSheet();  // Show file source bottom sheet on activity launch
         }
 
-        // Observe the sourceType LiveData to handle the selection
+        // Observe changes to the SourceType in the ViewModel and navigate accordingly
         coreViewModel.getSourceType().observe(this, sourceType -> {
             if (sourceType != null) {
-                // Handle navigation based on selected source type (camera or file manager)
+                // Navigate based on sourceType
                 if (sourceType == CoreViewModel.SourceType.CAMERA) {
-                    // Navigate to CameraFragment
-                    navController.navigate(R.id.cameraFragment);
+                    navToCamera();
                 } else if (sourceType == CoreViewModel.SourceType.FILE_MANAGER) {
-                    // Navigate to FileManagerFragment
-                    navController.navigate(R.id.fileManagerFragment);
+                    navToFileManager();
                 }
             }
         });
 
-        // Set up navigation UI
-        AppBarConfiguration appBarConfiguration =
-                new AppBarConfiguration.Builder(navController.getGraph()).build();
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+        // Observe actionType to manage the navigation flows based on it
+        coreViewModel.getActionType().observe(this, action -> {
+            if (action != null) {
+                handleActionType(action);
+            }
+        });
     }
 
     /**
@@ -75,6 +65,77 @@ public class CoreActivity extends AppCompatActivity {
         FileSourceFragment fileSourceFragment = new FileSourceFragment();
         fileSourceFragment.show(getSupportFragmentManager(), fileSourceFragment.getTag());
     }
+
+    /**
+     * Navigate to CameraFragment based on the source type (CAMERA).
+     */
+    private void navToCamera() {
+        // Navigate to Camera Fragment
+        navController.navigate(R.id.action_fileSourceFragment_to_cameraFragment);
+    }
+
+    /**
+     * Navigate to FileManagerFragment based on the source type (FILE_MANAGER).
+     */
+    private void navToFileManager() {
+        // Navigate to File Manager Fragment
+        navController.navigate(R.id.action_fileSourceFragment_to_fileManagerFragment);
+    }
+
+    /**
+     * Handle different action types and navigate accordingly.
+     */
+    private void handleActionType(String actionType) {
+        CoreViewModel.SourceType sourceType = coreViewModel.getSourceType().getValue();
+
+        if (sourceType == null) {
+            // Handle cases where source type is not set
+            return;
+        }
+
+        switch (sourceType) {
+            case CAMERA:
+                // Navigate based on action type when source is CAMERA
+                switch (actionType) {
+                    case "addwatermark":
+                        navController.navigate(R.id.action_cameraFragment_to_watermarkFragment);
+                        break;
+                    case "combinepdf":
+                        navController.navigate(R.id.action_cameraFragment_to_combinePdfFragment);
+                        break;
+                    case "convertpdf":
+                        navController.navigate(R.id.action_cameraFragment_to_imageToPdfFragment);
+                        break;
+                    default:
+                        // Handle unexpected action types for CAMERA
+                        break;
+                }
+                break;
+
+            case FILE_MANAGER:
+                // Navigate based on action type when source is FILE_MANAGER
+                switch (actionType) {
+                    case "addwatermark":
+                        navController.navigate(R.id.action_fileManagerFragment_to_watermarkFragment);
+                        break;
+                    case "combinepdf":
+                        navController.navigate(R.id.action_fileManagerFragment_to_combinePdfFragment);
+                        break;
+                    case "convertpdf":
+                        navController.navigate(R.id.action_fileManagerFragment_to_imageToPdfFragment);
+                        break;
+                    default:
+                        // Handle unexpected action types for FILE_MANAGER
+                        break;
+                }
+                break;
+
+            default:
+                // Handle unexpected source types
+                break;
+        }
+    }
+
 
     @Override
     public boolean onSupportNavigateUp() {

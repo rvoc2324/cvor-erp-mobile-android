@@ -8,7 +8,6 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.cvorapp.R;
@@ -16,17 +15,17 @@ import com.example.cvorapp.viewmodels.CoreViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 /**
- * FileSourceFragment serves as the modal bottom sheet to choose file source (Camera or File Manager).
+ * FileSourceFragment is a modal bottom sheet allowing users to choose between Camera or File Manager as the file source.
+ * It uses the CoreViewModel to communicate user selections back to the activity.
  */
 public class FileSourceFragment extends BottomSheetDialogFragment {
 
-    private LinearLayout cameraOption; // Option to select Camera
-    private LinearLayout fileManagerOption; // Option to select File Manager
-    private CoreViewModel coreViewModel; // Shared ViewModel to store the selected source type
+    private CoreViewModel coreViewModel; // Shared ViewModel for app state management
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        // Inflate the layout for the bottom sheet
         return inflater.inflate(R.layout.fragment_file_source, container, false);
     }
 
@@ -34,66 +33,32 @@ public class FileSourceFragment extends BottomSheetDialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Initialize ViewModel
+        // Initialize the shared ViewModel scoped to the activity
         coreViewModel = new ViewModelProvider(requireActivity()).get(CoreViewModel.class);
 
-        // Initialize the UI components
-        cameraOption = view.findViewById(R.id.option_camera);
-        fileManagerOption = view.findViewById(R.id.option_file_manager);
-
-        // Setup listeners for both options
-        setupListeners();
+        // Set up click listeners for Camera and File Manager options
+        setupListeners(view);
     }
 
     /**
-     * Set up listeners for both options to select Camera or File Manager.
+     * Set up click listeners for options and update the ViewModel with the selected source type.
+     *
+     * @param view The root view of the fragment.
      */
-    private void setupListeners() {
-        // Handle camera option selection
+    private void setupListeners(@NonNull View view) {
+        LinearLayout cameraOption = view.findViewById(R.id.option_camera);
+        LinearLayout fileManagerOption = view.findViewById(R.id.option_file_manager);
+
+        // Set the source type to CAMERA in the ViewModel and dismiss the bottom sheet
         cameraOption.setOnClickListener(v -> {
-            // Update the ViewModel with the selected source type
             coreViewModel.setSourceType(CoreViewModel.SourceType.CAMERA);
-
-            // Dismiss the bottom sheet after selection
-            dismiss();
-
-            // Trigger navigation to CameraFragment (handled in CoreActivity or other observer)
-            navigateToSelectedSource();
+            dismiss(); // Close the bottom sheet
         });
 
-        // Handle file manager option selection
+        // Set the source type to FILE_MANAGER in the ViewModel and dismiss the bottom sheet
         fileManagerOption.setOnClickListener(v -> {
-            // Update the ViewModel with the selected source type
             coreViewModel.setSourceType(CoreViewModel.SourceType.FILE_MANAGER);
-
-            // Dismiss the bottom sheet after selection
-            dismiss();
-
-            // Trigger navigation to FileManagerFragment (handled in CoreActivity or other observer)
-            navigateToSelectedSource();
+            dismiss(); // Close the bottom sheet
         });
-    }
-
-    /**
-     * Navigate to the appropriate fragment based on the selected source type.
-     */
-    private void navigateToSelectedSource() {
-        CoreViewModel.SourceType selectedSource = coreViewModel.getSourceType().getValue();
-        if (selectedSource != null) {
-            // Handle navigation logic based on selected source
-            if (selectedSource == CoreViewModel.SourceType.CAMERA) {
-                // Navigate to CameraFragment (or any specific fragment)
-                requireActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.nav_host_fragment_core, new CameraFragment())
-                        .addToBackStack(null)
-                        .commit();
-            } else if (selectedSource == CoreViewModel.SourceType.FILE_MANAGER) {
-                // Navigate to FileManagerFragment (or any specific fragment)
-                requireActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.nav_host_fragment_core, new FileManagerFragment())
-                        .addToBackStack(null)
-                        .commit();
-            }
-        }
     }
 }

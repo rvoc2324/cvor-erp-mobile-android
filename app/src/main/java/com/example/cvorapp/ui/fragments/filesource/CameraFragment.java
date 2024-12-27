@@ -1,6 +1,8 @@
 package com.example.cvorapp.ui.fragments.filesource;
 
+import android.Manifest;
 import android.content.ContentValues;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -11,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.camera.core.Camera;
@@ -23,7 +27,6 @@ import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
 
 import com.example.cvorapp.R;
 import com.example.cvorapp.viewmodels.CoreViewModel;
@@ -51,6 +54,16 @@ public class CameraFragment extends Fragment {
 
     private CoreViewModel viewModel;
 
+    // Permission launcher
+    private final ActivityResultLauncher<String> cameraPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    setupCamera(); // Proceed if permission is granted
+                } else {
+                    Toast.makeText(requireContext(), "Camera permission is required", Toast.LENGTH_SHORT).show();
+                }
+            });
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -70,8 +83,18 @@ public class CameraFragment extends Fragment {
 
         viewModel = new ViewModelProvider(requireActivity()).get(CoreViewModel.class);
 
-        setupCamera();
+        // Check permissions on initialization
+        checkAndRequestPermissions();
+
         setupButtonListeners();
+    }
+
+    private void checkAndRequestPermissions() {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            cameraPermissionLauncher.launch(Manifest.permission.CAMERA); // Request CAMERA permission
+        } else {
+            setupCamera(); // Permission already granted
+        }
     }
 
     private void setupCamera() {
@@ -154,14 +177,15 @@ public class CameraFragment extends Fragment {
         buttonConfirm.setOnClickListener(v -> {
             if (capturedImageUri != null) {
                 viewModel.setSelectedFileUri(capturedImageUri);
-                Navigation.findNavController(requireView()).navigate(R.id.action_cameraFragment_to_watermarkFragment);
+                // The navigation logic will now be handled by the CoreActivity, not in the fragment
+                Toast.makeText(requireContext(), "Image confirmed", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(requireContext(), "No image to confirm", Toast.LENGTH_SHORT).show();
             }
         });
 
         // Back button
-        buttonBack.setOnClickListener(v -> Navigation.findNavController(requireView()).navigateUp());
+        buttonBack.setOnClickListener(v -> requireActivity().getOnBackPressedDispatcher().onBackPressed());
     }
 
     private void showImageConfirmation() {
