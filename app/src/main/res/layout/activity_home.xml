@@ -29,7 +29,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="16dp"
-        android:background="@color/fragmentBackground">
+        android:background="@drawable/rounded_bottom_border">
 
         <!-- Animated text for the slogan -->
         <TextView
@@ -82,6 +82,6 @@
         android:layout_gravity="bottom"
         app:menu="@menu/bottom_nav_menu"
         android:background="@color/colorPrimary"
-        app:itemIconTint="@color/buttonHighlightPrimary"
-        app:itemTextColor="@color/buttonHighlightPrimary" />
+        app:itemIconTint="@color/white"
+        app:itemTextColor="@color/text" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

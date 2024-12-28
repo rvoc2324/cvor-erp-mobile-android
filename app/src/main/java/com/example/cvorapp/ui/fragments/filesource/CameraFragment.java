@@ -127,7 +127,7 @@ public class CameraFragment extends Fragment {
         // Flash toggle
         buttonFlashToggle.setOnClickListener(v -> {
             isFlashOn = !isFlashOn;
-            buttonFlashToggle.setImageResource(isFlashOn ? R.drawable.camera_flash_on : R.drawable.camera_flash_off);
+            buttonFlashToggle.setImageResource(isFlashOn ? R.drawable.baseline_flash_on_24 : R.drawable.baseline_flash_off_24);
             if (imageCapture != null) {
                 imageCapture.setFlashMode(isFlashOn ? ImageCapture.FLASH_MODE_ON : ImageCapture.FLASH_MODE_OFF);
             }

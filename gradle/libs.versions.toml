@@ -16,6 +16,7 @@ coroutinesVersion = "1.7.3"
 workVersion = "2.10.0"
 permissionsDispatcher = "4.9.2"
 hilt = "2.48"
+pdfbox = '2.0.29'
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -42,6 +43,7 @@ permissions-dispatcher = { group = "com.github.permissions-dispatcher", name = "
 permissions-dispatcher-processor = { group = "com.github.permissions-dispatcher", name = "permissionsdispatcher-processor", version.ref = "permissionsDispatcher" }
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+pdfbox = { group = "org.apache.pdfbox", name = "pdfbox", version.ref = "pdfbox" }
 
 
 [plugins]

@@ -3,7 +3,8 @@
     <!-- Primary Colors -->
     <color name="colorPrimary">#102A43</color>
     <color name="colorPrimaryDark">#102A43</color>
-    <color name="colorAccent">#0978F6</color>
+    <color name="colorAccent">#1e3d58</color>
+    <!-- #102A43 -->
 
     <!-- Button Colors -->
     <color name="buttonPrimary">#0978F6</color>
@@ -20,10 +21,11 @@
     <color name="borderColor">#F8F9FA</color>
 
     <!-- Fragment Background -->
-    <color name="fragmentBackground">#1E3D58</color>
+    <color name="fragmentBackground">#1e3d58</color>
 
     <!-- Additional Common Colors -->
     <color name="white">#F8F9FA</color>
     <color name="black">#000000</color>
     <color name="grey">#808080</color>
+    <color name="shine">"#3f6080"</color>
  </resources>

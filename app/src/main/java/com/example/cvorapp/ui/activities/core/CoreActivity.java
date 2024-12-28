@@ -38,10 +38,9 @@ public class CoreActivity extends AppCompatActivity {
             showFileSourceBottomSheet();  // Show file source bottom sheet on activity launch
         }
 
-        // Observe changes to the SourceType in the ViewModel and navigate accordingly
+        // Observe SourceType to navigate to the appropriate source fragment
         coreViewModel.getSourceType().observe(this, sourceType -> {
             if (sourceType != null) {
-                // Navigate based on sourceType
                 if (sourceType == CoreViewModel.SourceType.CAMERA) {
                     navToCamera();
                 } else if (sourceType == CoreViewModel.SourceType.FILE_MANAGER) {
@@ -50,16 +49,30 @@ public class CoreActivity extends AppCompatActivity {
             }
         });
 
-        // Observe actionType to manage the navigation flows based on it
+        // Observe ActionType to handle navigation based on selected action
         coreViewModel.getActionType().observe(this, action -> {
             if (action != null) {
                 handleActionType(action);
             }
         });
+
+        // Observe Navigation Events to manage flow between fragments
+        coreViewModel.getNavigationEvent().observe(this, event -> {
+            if (event != null) {
+                handleNavigationEvent(event);
+            }
+        });
+
+        // Observe Action Completion to navigate to the preview fragment
+        coreViewModel.isActionCompleted().observe(this, isCompleted -> {
+            if (isCompleted != null && isCompleted) {
+                navToPreview();
+            }
+        });
     }
 
     /**
-     * Method to show the FileSourceFragment as a bottom sheet.
+     * Show the FileSourceFragment as a bottom sheet.
      */
     private void showFileSourceBottomSheet() {
         FileSourceFragment fileSourceFragment = new FileSourceFragment();
@@ -67,35 +80,28 @@ public class CoreActivity extends AppCompatActivity {
     }
 
     /**
-     * Navigate to CameraFragment based on the source type (CAMERA).
+     * Navigate to CameraFragment.
      */
     private void navToCamera() {
-        // Navigate to Camera Fragment
         navController.navigate(R.id.action_fileSourceFragment_to_cameraFragment);
     }
 
     /**
-     * Navigate to FileManagerFragment based on the source type (FILE_MANAGER).
+     * Navigate to FileManagerFragment.
      */
     private void navToFileManager() {
-        // Navigate to File Manager Fragment
         navController.navigate(R.id.action_fileSourceFragment_to_fileManagerFragment);
     }
 
     /**
-     * Handle different action types and navigate accordingly.
+     * Handle ActionType navigation.
      */
     private void handleActionType(String actionType) {
         CoreViewModel.SourceType sourceType = coreViewModel.getSourceType().getValue();
-
-        if (sourceType == null) {
-            // Handle cases where source type is not set
-            return;
-        }
+        if (sourceType == null) return;
 
         switch (sourceType) {
             case CAMERA:
-                // Navigate based on action type when source is CAMERA
                 switch (actionType) {
                     case "addwatermark":
                         navController.navigate(R.id.action_cameraFragment_to_watermarkFragment);
@@ -106,14 +112,10 @@ public class CoreActivity extends AppCompatActivity {
                     case "convertpdf":
                         navController.navigate(R.id.action_cameraFragment_to_imageToPdfFragment);
                         break;
-                    default:
-                        // Handle unexpected action types for CAMERA
-                        break;
                 }
                 break;
 
             case FILE_MANAGER:
-                // Navigate based on action type when source is FILE_MANAGER
                 switch (actionType) {
                     case "addwatermark":
                         navController.navigate(R.id.action_fileManagerFragment_to_watermarkFragment);
@@ -124,18 +126,61 @@ public class CoreActivity extends AppCompatActivity {
                     case "convertpdf":
                         navController.navigate(R.id.action_fileManagerFragment_to_imageToPdfFragment);
                         break;
-                    default:
-                        // Handle unexpected action types for FILE_MANAGER
-                        break;
                 }
-                break;
-
-            default:
-                // Handle unexpected source types
                 break;
         }
     }
 
+    /**
+     * Handle Navigation Events for Preview and Share steps.
+     */
+    private void handleNavigationEvent(String event) {
+        switch (event) {
+            case "navigate_to_preview":
+                navToPreview();
+                break;
+            case "navigate_to_share":
+                navToShare();
+                break;
+        }
+        // Reset navigation event after handling
+        coreViewModel.setNavigationEvent(null);
+    }
+
+    /**
+     * Navigate to PreviewFragment.
+     */
+    private void navToPreview() {
+        String actionType = coreViewModel.getActionType().getValue();
+        if (actionType == null || actionType.isEmpty()) {
+            return; // Return early if actionType is not set
+        }
+
+        switch (actionType) {
+            case "addwatermark":
+                navController.navigate(R.id.action_watermarkFragment_to_previewFragment);
+                break;
+
+            case "combinepdf":
+                navController.navigate(R.id.action_combinePdfFragment_to_previewFragment);
+                break;
+
+            case "convertpdf":
+                navController.navigate(R.id.action_imageToPdfFragment_to_previewFragment);
+                break;
+
+            default:
+                // Handle unexpected actionType (optional)
+                break;
+        }
+    }
+
+    /**
+     * Navigate to ShareFragment.
+     */
+    private void navToShare() {
+        navController.navigate(R.id.action_previewFragment_to_shareFragment);
+    }
 
     @Override
     public boolean onSupportNavigateUp() {

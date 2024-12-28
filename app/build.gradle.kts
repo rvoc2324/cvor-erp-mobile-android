@@ -64,6 +64,9 @@ dependencies {
     implementation(libs.camerax.lifecycle)
     implementation(libs.camerax.view)
 
+    //PDF Libraries
+    implementation(libs.pdfbox)
+
     // Room Database
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
