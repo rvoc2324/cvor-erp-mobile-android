@@ -72,7 +72,26 @@ public class WatermarkFragment extends Fragment {
             // Perform watermarking
             WatermarkService watermarkService = new WatermarkService();
             try {
-                File watermarkedFile = watermarkService.applyWatermark(selectedFileUri, watermarkViewModel.getOptions(), requireContext());
+                String fileType = requireContext().getContentResolver().getType(selectedFileUri);
+
+                File watermarkedFile;
+                if (fileType != null && fileType.equals("application/pdf")) {
+                    // PDF file
+                    watermarkedFile = watermarkService.applyWatermarkPDF(
+                            selectedFileUri,
+                            watermarkViewModel.getOptions(),
+                            requireContext()
+                    );
+                } else if (fileType != null && (fileType.equals("image/jpeg") || fileType.equals("image/png"))) {
+                    // Image file (JPG or PNG)
+                    watermarkedFile = watermarkService.applyWatermarkImage(
+                            selectedFileUri,
+                            watermarkViewModel.getOptions(),
+                            requireContext()
+                    );
+                } else {
+                    throw new IllegalArgumentException("Unsupported file type. Only PDF, JPEG, or PNG are supported.");
+                }
                 coreViewModel.setProcessedFile(watermarkedFile);
 
                 // Navigate to PreviewFragment

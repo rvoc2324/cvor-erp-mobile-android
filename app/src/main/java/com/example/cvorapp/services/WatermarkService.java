@@ -2,9 +2,8 @@ package com.example.cvorapp.services;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Matrix;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.util.Log;
@@ -15,104 +14,135 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.graphics.state.PDExtendedGraphicsState;
+import org.apache.pdfbox.pdmodel.graphics.color.PDColor;
+import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * Service for applying watermark text to PDF and image files.
+ */
 public class WatermarkService {
 
     private static final String TAG = "WatermarkService";
 
-    public File applyWatermark(Uri inputFile, WatermarkOptions options, Context context) throws IOException {
-        try {
-            String watermarkText = options.generateWatermarkText();
-            InputStream inputStream = context.getContentResolver().openInputStream(inputFile);
-            if (inputStream == null) {
-                throw new IOException("Failed to open input file.");
+    /**
+     * Applies a watermark to an image file (JPEG/PNG).
+     *
+     * @param inputUri The Uri of the input image file.
+     * @param options  The watermark options containing the text.
+     * @param context  The application context.
+     * @return The watermarked image file.
+     * @throws Exception If there are errors in processing the file.
+     */
+    public File applyWatermarkImage(Uri inputUri, WatermarkOptions options, Context context) throws Exception {
+        String watermarkText = options.generateWatermarkText();
+        File outputFile = new File(context.getCacheDir(), "watermarked_image.png");
+
+        try (InputStream inputStream = context.getContentResolver().openInputStream(inputUri)) {
+            Bitmap originalBitmap = android.graphics.BitmapFactory.decodeStream(inputStream);
+
+            // Create a mutable bitmap to draw the watermark
+            Bitmap watermarkedBitmap = originalBitmap.copy(Bitmap.Config.ARGB_8888, true);
+            Canvas canvas = new Canvas(watermarkedBitmap);
+
+            // Set up paint for watermark text
+            Paint paint = new Paint();
+            paint.setColor(Color.BLACK);
+            paint.setAlpha(100); // 40% transparency
+            paint.setTextSize(36);
+            paint.setAntiAlias(true);
+
+            // Calculate text width and height
+            float textWidth = paint.measureText(watermarkText);
+            float textHeight = paint.getTextSize();
+
+            // Draw watermark text across the image
+            float y = textHeight;
+            while (y < watermarkedBitmap.getHeight() + textHeight) {
+                float x = 0;
+                while (x < watermarkedBitmap.getWidth() + textWidth) {
+                    canvas.drawText(watermarkText, x, y, paint);
+                    x += textWidth;
+                }
+                y += textHeight;
             }
 
-            // Check file type (image or PDF)
-            String fileType = context.getContentResolver().getType(inputFile);
-            if (fileType != null && fileType.startsWith("image/")) {
-                return watermarkImage(inputStream, watermarkText, context);
-            } else if (fileType != null && fileType.equals("application/pdf")) {
-                return watermarkPdf(inputStream, watermarkText, context);
-            } else {
-                throw new IOException("Unsupported file type.");
+            // Save the watermarked bitmap to file
+            try (FileOutputStream out = new FileOutputStream(outputFile)) {
+                watermarkedBitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
             }
         } catch (Exception e) {
-            Log.e(TAG, "Error applying watermark: " + e.getMessage(), e);
-            throw new IOException("Error applying watermark.", e);
+            Log.e(TAG, "Error applying watermark to image: " + e.getMessage(), e);
+            throw new Exception("Failed to process the image file.", e);
         }
+
+        return outputFile;
     }
 
-    private File watermarkImage(InputStream inputStream, String watermarkText, Context context) throws IOException {
-        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-        Bitmap watermarkedBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
+    /**
+     * Applies a watermark to a PDF file.
+     *
+     * @param inputUri The Uri of the input PDF file.
+     * @param options  The watermark options containing the text.
+     * @param context  The application context.
+     * @return The watermarked PDF file.
+     * @throws Exception If there are errors in processing the file.
+     */
+    public File applyWatermarkPDF(Uri inputUri, WatermarkOptions options, Context context) throws Exception {
+        String watermarkText = options.generateWatermarkText();
+        File outputFile = new File(context.getCacheDir(), "watermarked_document.pdf");
 
-        Canvas canvas = new Canvas(watermarkedBitmap);
-        Paint paint = new Paint();
-        paint.setColor(0x80000000); // Semi-transparent black
-        paint.setTextSize(48);
-        paint.setAntiAlias(true);
+        try (InputStream inputStream = context.getContentResolver().openInputStream(inputUri)) {
+            PDDocument document = PDDocument.load(inputStream);
 
-        float angle = -45; // Rotate watermark text at -45 degrees
-        Matrix matrix = new Matrix();
-        matrix.postRotate(angle);
-
-        float textWidth = paint.measureText(watermarkText);
-        float textHeight = paint.descent() - paint.ascent();
-
-        int stepX = (int) textWidth + 50;
-        int stepY = (int) textHeight + 50;
-
-        for (int y = -stepY; y < canvas.getHeight(); y += stepY) {
-            for (int x = -stepX; x < canvas.getWidth(); x += stepX) {
-                canvas.save();
-                canvas.rotate(angle, x, y);
-                canvas.drawText(watermarkText, x, y, paint);
-                canvas.restore();
-            }
-        }
-
-        File watermarkedFile = new File(context.getCacheDir(), "watermarked_image.png");
-        try (FileOutputStream out = new FileOutputStream(watermarkedFile)) {
-            watermarkedBitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
-        }
-        return watermarkedFile;
-    }
-
-    private File watermarkPdf(InputStream inputStream, String watermarkText, Context context) throws IOException {
-        File watermarkedFile = new File(context.getCacheDir(), "watermarked_document.pdf");
-        try (PDDocument document = PDDocument.load(inputStream)) {
             for (PDPage page : document.getPages()) {
-                try (PDPageContentStream contentStream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, true)) {
-                    contentStream.setNonStrokingColor(0, 0, 0, 128); // Semi-transparent black
-                    contentStream.setFont(PDType1Font.HELVETICA_BOLD, 48);
+                try (PDPageContentStream contentStream = new PDPageContentStream(
+                        document, page, PDPageContentStream.AppendMode.APPEND, true, true)) {
 
+                    // Set transparency for the watermark
+                    PDExtendedGraphicsState graphicsState = new PDExtendedGraphicsState();
+                    graphicsState.setNonStrokingAlphaConstant(0.2f); // 20% opacity
+                    contentStream.setGraphicsStateParameters(graphicsState);
+
+                    // Set font and color
+                    float fontSize = 40;
+                    contentStream.setFont(PDType1Font.HELVETICA, fontSize);
+                    contentStream.setNonStrokingColor(new PDColor(new float[]{0.588f, 0.588f, 0.588f}, PDDeviceRGB.INSTANCE)); // Light gray
+
+                    // Calculate page dimensions and watermark metrics
                     float pageWidth = page.getMediaBox().getWidth();
                     float pageHeight = page.getMediaBox().getHeight();
+                    float textWidth = PDType1Font.HELVETICA.getStringWidth(watermarkText) / 1000 * fontSize;
 
-                    float textWidth = contentStream.getFont().getStringWidth(watermarkText) / 1000 * 48;
-                    float textHeight = 48;
-
-                    int stepX = (int) textWidth + 50;
-                    int stepY = (int) textHeight + 50;
-
-                    contentStream.beginText();
-                    for (float y = -stepY; y < pageHeight + stepY; y += stepY) {
-                        for (float x = -stepX; x < pageWidth + stepX; x += stepX) {
-                            contentStream.setTextMatrix(Matrix.getRotateInstance(Math.toRadians(-45), x, y));
+                    // Render watermark text diagonally across the page
+                    for (float y = 0; y < pageHeight; y += 100) {
+                        for (float x = 0; x < pageWidth; x += textWidth + 50) {
+                            contentStream.beginText();
+                            contentStream.newLineAtOffset(x, y);
                             contentStream.showText(watermarkText);
+                            contentStream.endText();
                         }
                     }
-                    contentStream.endText();
+                } catch (Exception e) {
+                    Log.e(TAG, "Error applying watermark to PDF page: " + e.getMessage(), e);
+                    throw new Exception("Failed to process the PDF file.", e);
                 }
             }
-            document.save(watermarkedFile);
+
+            // Save the watermarked PDF
+            try (FileOutputStream out = new FileOutputStream(outputFile)) {
+                document.save(out);
+            }
+            document.close();
+        } catch (Exception e) {
+            Log.e(TAG, "Error applying watermark to PDF: " + e.getMessage(), e);
+            throw new Exception("Failed to process the PDF file.", e);
         }
-        return watermarkedFile;
+
+        return outputFile;
     }
 }

@@ -14,7 +14,7 @@ import com.example.cvorapp.models.WatermarkOptions;
  */
 public class WatermarkViewModel extends AndroidViewModel {
 
-    private final MutableLiveData<String> organizationName = new MutableLiveData<>();
+    private final MutableLiveData<String> shareWith = new MutableLiveData<>();
     private final MutableLiveData<String> purpose = new MutableLiveData<>();
     private final MutableLiveData<String> generatedWatermarkText = new MutableLiveData<>();
 
@@ -25,7 +25,7 @@ public class WatermarkViewModel extends AndroidViewModel {
     }
 
     public void setInputs(String organizationName, String purpose) {
-        this.organizationName.setValue(organizationName);
+        this.shareWith.setValue(organizationName);
         this.purpose.setValue(purpose);
         this.options = new WatermarkOptions(organizationName, purpose);
         generatedWatermarkText.setValue(options.generateWatermarkText());
