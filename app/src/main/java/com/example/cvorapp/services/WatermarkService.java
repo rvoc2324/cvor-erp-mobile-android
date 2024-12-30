@@ -95,10 +95,26 @@ public class WatermarkService {
     public File applyWatermarkPDF(Uri inputUri, WatermarkOptions options, Context context) throws Exception {
         String watermarkText = options.generateWatermarkText();
         File outputFile = new File(context.getCacheDir(), "watermarked_document.pdf");
+        PdfHandlingService pdfHandlingService = new PdfHandlingService();
+
+        PDDocument document = null;
 
         try (InputStream inputStream = context.getContentResolver().openInputStream(inputUri)) {
-            PDDocument document = PDDocument.load(inputStream);
+            try {
+                // Try loading the PDF (throws an exception if encrypted)
+                document = PDDocument.load(inputStream);
+            } catch (Exception e) {
+                Log.w(TAG, "PDF might be encrypted. Attempting decryption...");
+                // Attempt to decrypt the PDF
+                try (InputStream retryInputStream = context.getContentResolver().openInputStream(inputUri)) {
+                    document = pdfHandlingService.decryptPDF(retryInputStream, context);
+                } catch (Exception decryptionException) {
+                    Log.e(TAG, "Failed to decrypt the PDF: " + decryptionException.getMessage(), decryptionException);
+                    throw new Exception("The PDF is encrypted and could not be processed.", decryptionException);
+                }
+            }
 
+            // Apply watermark to each page
             for (PDPage page : document.getPages()) {
                 try (PDPageContentStream contentStream = new PDPageContentStream(
                         document, page, PDPageContentStream.AppendMode.APPEND, true, true)) {
@@ -137,12 +153,11 @@ public class WatermarkService {
             try (FileOutputStream out = new FileOutputStream(outputFile)) {
                 document.save(out);
             }
-            document.close();
-        } catch (Exception e) {
-            Log.e(TAG, "Error applying watermark to PDF: " + e.getMessage(), e);
-            throw new Exception("Failed to process the PDF file.", e);
+        } finally {
+            if (document != null) {
+                document.close();
+            }
         }
-
         return outputFile;
     }
 }

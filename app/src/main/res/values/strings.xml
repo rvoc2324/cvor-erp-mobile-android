@@ -5,7 +5,7 @@
     <string name="add_watermark_button">Add Watermark and Share File</string>
     <string name="combine_pdfs_button">Combine PDFs</string>
     <string name="convert_to_pdf_button">Convert Images to PDF</string>
-    <string name="learn_more">Learn more</string>
+    <string name="whatsnew">Whats New</string>
     <string name="flash_toggle">Flash ON</string>
     <string name="capture_image">Take Photo</string>
     <string name="retake_image">Retake the photo</string>
@@ -22,4 +22,9 @@
     <string name="purpose">Purpose</string>
     <string name="watermark_text">Watermark to be added</string>
     <string name="preview">Preview</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="capture_more_images">Capture more images?</string>
+    <string name="combine_pdf">Combine PDFs</string>
+    <string name="convert_to_pdf">Convert to PDF</string>
 </resources>

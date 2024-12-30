@@ -1,6 +1,7 @@
 package com.example.cvorapp.ui.fragments.filesource;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -17,7 +18,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.camera.core.Camera;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageCapture;
 import androidx.camera.core.ImageCaptureException;
@@ -58,7 +58,7 @@ public class CameraFragment extends Fragment {
     private final ActivityResultLauncher<String> cameraPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (isGranted) {
-                    setupCamera(); // Proceed if permission is granted
+                    setupCamera();
                 } else {
                     Toast.makeText(requireContext(), "Camera permission is required", Toast.LENGTH_SHORT).show();
                 }
@@ -83,17 +83,15 @@ public class CameraFragment extends Fragment {
 
         viewModel = new ViewModelProvider(requireActivity()).get(CoreViewModel.class);
 
-        // Check permissions on initialization
         checkAndRequestPermissions();
-
         setupButtonListeners();
     }
 
     private void checkAndRequestPermissions() {
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            cameraPermissionLauncher.launch(Manifest.permission.CAMERA); // Request CAMERA permission
+            cameraPermissionLauncher.launch(Manifest.permission.CAMERA);
         } else {
-            setupCamera(); // Permission already granted
+            setupCamera();
         }
     }
 
@@ -108,14 +106,14 @@ public class CameraFragment extends Fragment {
                         .build();
 
                 Preview preview = new Preview.Builder().build();
-                preview.setSurfaceProvider(previewView.getSurfaceProvider()); // Link PreviewView
+                preview.setSurfaceProvider(previewView.getSurfaceProvider());
 
                 imageCapture = new ImageCapture.Builder()
                         .setFlashMode(isFlashOn ? ImageCapture.FLASH_MODE_ON : ImageCapture.FLASH_MODE_OFF)
                         .build();
 
                 cameraProvider.unbindAll();
-                Camera camera = cameraProvider.bindToLifecycle(this, cameraSelector, imageCapture);
+                cameraProvider.bindToLifecycle(this, cameraSelector, imageCapture);
             } catch (Exception e) {
                 Log.e(TAG, "Error initializing camera", e);
                 Toast.makeText(requireContext(), "Failed to initialize camera", Toast.LENGTH_SHORT).show();
@@ -140,7 +138,6 @@ public class CameraFragment extends Fragment {
                 return;
             }
 
-            // Generate unique filename
             String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(System.currentTimeMillis());
             ContentValues contentValues = new ContentValues();
             contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, "JPEG_" + timestamp);
@@ -176,9 +173,8 @@ public class CameraFragment extends Fragment {
         // Confirm image
         buttonConfirm.setOnClickListener(v -> {
             if (capturedImageUri != null) {
-                viewModel.setSelectedFileUri(capturedImageUri);
-                // The navigation logic will now be handled by the CoreActivity, not in the fragment
-                Toast.makeText(requireContext(), "Image confirmed", Toast.LENGTH_SHORT).show();
+                viewModel.addSelectedFileUri(capturedImageUri);
+                askCaptureMoreImages();
             } else {
                 Toast.makeText(requireContext(), "No image to confirm", Toast.LENGTH_SHORT).show();
             }
@@ -198,5 +194,17 @@ public class CameraFragment extends Fragment {
         buttonCapture.setVisibility(View.VISIBLE);
         buttonRetake.setVisibility(View.GONE);
         buttonConfirm.setVisibility(View.GONE);
+        capturedImageUri = null;
+    }
+
+    private void askCaptureMoreImages() {
+        String dialogMessage = getString(R.string.capture_more_images);
+        String dialogYes = getString(R.string.yes);
+        String dialogNo = getString(R.string.no);
+        new AlertDialog.Builder(requireContext())
+                .setMessage(dialogMessage)
+                .setPositiveButton(dialogYes, (dialog, which) -> resetCaptureState())
+                .setNegativeButton(dialogNo, (dialog, which) -> viewModel.setNavigationEvent("navigate_to_action"))
+                .show();
     }
 }

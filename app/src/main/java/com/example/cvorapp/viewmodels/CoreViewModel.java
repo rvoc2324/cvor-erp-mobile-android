@@ -9,9 +9,11 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * CoreViewModel manages the state of the file and navigation arguments throughout the lifecycle of CoreActivity.
+ * CoreViewModel manages the state of files and navigation arguments throughout the lifecycle of CoreActivity.
  */
 public class CoreViewModel extends AndroidViewModel {
 
@@ -21,13 +23,12 @@ public class CoreViewModel extends AndroidViewModel {
     }
 
     private final MutableLiveData<SourceType> sourceType = new MutableLiveData<>(null);
-    private final MutableLiveData<Uri> selectedFileUri = new MutableLiveData<>(null);
-    private final MutableLiveData<File> processedFile = new MutableLiveData<>(null);
+    private final MutableLiveData<List<Uri>> selectedFileUris = new MutableLiveData<>(new ArrayList<>());
+    private final MutableLiveData<List<File>> processedFiles = new MutableLiveData<>(new ArrayList<>());
     private final MutableLiveData<String> actionType = new MutableLiveData<>("");
 
     // Navigation events
     private final MutableLiveData<String> navigationEvent = new MutableLiveData<>(null);
-    private final MutableLiveData<Boolean> isActionCompleted = new MutableLiveData<>(false); // Tracks action completion (e.g., watermark added, PDF combined)
 
     public CoreViewModel(@NonNull Application application) {
         super(application);
@@ -51,22 +52,56 @@ public class CoreViewModel extends AndroidViewModel {
         return sourceType;
     }
 
-    // Selected File URI
-    public void setSelectedFileUri(Uri uri) {
-        selectedFileUri.setValue(uri);
+    // Selected File URIs
+    public void setSelectedFileUris(List<Uri> uris) {
+        selectedFileUris.setValue(new ArrayList<>(uris)); // Replace with new list
     }
 
-    public LiveData<Uri> getSelectedFileUri() {
-        return selectedFileUri;
+    public LiveData<List<Uri>> getSelectedFileUris() {
+        return selectedFileUris;
+    }
+
+    public void addSelectedFileUri(Uri uri) {
+        List<Uri> uris = selectedFileUris.getValue();
+        if (uris != null) {
+            uris.add(uri);
+            selectedFileUris.setValue(uris);
+        }
+    }
+
+    public void removeSelectedFileUri(Uri uri) {
+        List<Uri> uris = selectedFileUris.getValue();
+        if (uris != null) {
+            uris.remove(uri);
+            selectedFileUris.setValue(uris);
+        }
+    }
+
+    public void reorderSelectedFileUris(int fromPosition, int toPosition) {
+        List<Uri> uris = selectedFileUris.getValue();
+        if (uris != null && fromPosition >= 0 && toPosition >= 0 &&
+                fromPosition < uris.size() && toPosition < uris.size()) {
+            Uri movedUri = uris.remove(fromPosition);
+            uris.add(toPosition, movedUri);
+            selectedFileUris.setValue(uris);
+        }
     }
 
     // Processed File
-    public void setProcessedFile(File file) {
-        processedFile.setValue(file);
+    public void setProcessedFiles(List<File> file) {
+        processedFiles.setValue(file);
     }
 
-    public LiveData<File> getProcessedFile() {
-        return processedFile;
+    public LiveData<List<File>> getProcessedFiles() {
+        return processedFiles;
+    }
+
+    public void addProcessedFile(File file) {
+        List<File> files = processedFiles.getValue();
+        if (files != null) {
+            files.add(file);
+            processedFiles.setValue(files);
+        }
     }
 
     // Navigation Events
@@ -76,15 +111,6 @@ public class CoreViewModel extends AndroidViewModel {
 
     public LiveData<String> getNavigationEvent() {
         return navigationEvent;
-    }
-
-    // Action Completion
-    public void setActionCompleted(boolean completed) {
-        isActionCompleted.setValue(completed);
-    }
-
-    public LiveData<Boolean> isActionCompleted() {
-        return isActionCompleted;
     }
 
     // Utility Methods
@@ -99,9 +125,8 @@ public class CoreViewModel extends AndroidViewModel {
     // Clear State
     public void clearState() {
         sourceType.setValue(null);
-        selectedFileUri.setValue(null);
-        processedFile.setValue(null);
+        selectedFileUris.setValue(new ArrayList<>());
+        processedFiles.setValue(null);
         navigationEvent.setValue(null);
-        isActionCompleted.setValue(false);
     }
 }

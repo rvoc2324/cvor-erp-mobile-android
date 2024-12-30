@@ -9,8 +9,8 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.example.cvorapp.R;
-import com.example.cvorapp.viewmodels.CoreViewModel;
 import com.example.cvorapp.ui.fragments.filesource.FileSourceFragment;
+import com.example.cvorapp.viewmodels.CoreViewModel;
 
 public class CoreActivity extends AppCompatActivity {
 
@@ -25,20 +25,20 @@ public class CoreActivity extends AppCompatActivity {
         // Initialize ViewModel
         coreViewModel = new ViewModelProvider(this).get(CoreViewModel.class);
 
-        // Get the actionType from intent extras
+        // Set actionType from intent extras
         String actionType = getIntent().getStringExtra("actionType");
         if (actionType != null) {
-            coreViewModel.setActionType(actionType);  // Set the action type in ViewModel
+            coreViewModel.setActionType(actionType);
         }
 
-        // Initialize the NavController for fragment navigation
+        // Initialize the NavController
         navController = Navigation.findNavController(this, R.id.nav_host_fragment_core);
 
         if (savedInstanceState == null) {
-            showFileSourceBottomSheet();  // Show file source bottom sheet on activity launch
+            showFileSourceBottomSheet();
         }
 
-        // Observe SourceType to navigate to the appropriate source fragment
+        // Observe source type for initial navigation
         coreViewModel.getSourceType().observe(this, sourceType -> {
             if (sourceType != null) {
                 if (sourceType == CoreViewModel.SourceType.CAMERA) {
@@ -49,30 +49,31 @@ public class CoreActivity extends AppCompatActivity {
             }
         });
 
-        // Observe ActionType to handle navigation based on selected action
-        coreViewModel.getActionType().observe(this, action -> {
-            if (action != null) {
-                handleActionType(action);
-            }
-        });
-
-        // Observe Navigation Events to manage flow between fragments
+        // Observe navigation events for flow management
         coreViewModel.getNavigationEvent().observe(this, event -> {
             if (event != null) {
-                handleNavigationEvent(event);
-            }
-        });
+                switch (event) {
+                    case "navigate_to_action":
+                        navToAction();
+                        break;
 
-        // Observe Action Completion to navigate to the preview fragment
-        coreViewModel.isActionCompleted().observe(this, isCompleted -> {
-            if (isCompleted != null && isCompleted) {
-                navToPreview();
+                    case "navigate_to_preview":
+                        navToPreview();
+                        break;
+
+                    case "navigate_to_share":
+                        navToShare();
+                        break;
+                }
+
+                // Reset navigation event after handling
+                coreViewModel.setNavigationEvent(null);
             }
         });
     }
 
     /**
-     * Show the FileSourceFragment as a bottom sheet.
+     * Show the FileSourceFragment as a bottom sheet on activity launch.
      */
     private void showFileSourceBottomSheet() {
         FileSourceFragment fileSourceFragment = new FileSourceFragment();
@@ -94,89 +95,66 @@ public class CoreActivity extends AppCompatActivity {
     }
 
     /**
-     * Handle ActionType navigation.
+     * Handle navigation to the next action based on source and action types.
      */
-    private void handleActionType(String actionType) {
+    private void navToAction() {
         CoreViewModel.SourceType sourceType = coreViewModel.getSourceType().getValue();
-        if (sourceType == null) return;
+        String actionType = coreViewModel.getActionType().getValue();
+
+        if (sourceType == null || actionType == null) return;
 
         switch (sourceType) {
             case CAMERA:
-                switch (actionType) {
-                    case "addwatermark":
-                        navController.navigate(R.id.action_cameraFragment_to_watermarkFragment);
-                        break;
-                    case "combinepdf":
-                        navController.navigate(R.id.action_cameraFragment_to_combinePdfFragment);
-                        break;
-                    case "convertpdf":
-                        navController.navigate(R.id.action_cameraFragment_to_imageToPdfFragment);
-                        break;
-                }
+                navigateFromCamera(actionType);
                 break;
 
             case FILE_MANAGER:
-                switch (actionType) {
-                    case "addwatermark":
-                        navController.navigate(R.id.action_fileManagerFragment_to_watermarkFragment);
-                        break;
-                    case "combinepdf":
-                        navController.navigate(R.id.action_fileManagerFragment_to_combinePdfFragment);
-                        break;
-                    case "convertpdf":
-                        navController.navigate(R.id.action_fileManagerFragment_to_imageToPdfFragment);
-                        break;
-                }
+                navigateFromFileManager(actionType);
                 break;
         }
     }
 
-    /**
-     * Handle Navigation Events for Preview and Share steps.
-     */
-    private void handleNavigationEvent(String event) {
-        switch (event) {
-            case "navigate_to_preview":
-                navToPreview();
-                break;
-            case "navigate_to_share":
-                navToShare();
-                break;
-        }
-        // Reset navigation event after handling
-        coreViewModel.setNavigationEvent(null);
-    }
-
-    /**
-     * Navigate to PreviewFragment.
-     */
-    private void navToPreview() {
-        String actionType = coreViewModel.getActionType().getValue();
-        if (actionType == null || actionType.isEmpty()) {
-            return; // Return early if actionType is not set
-        }
-
+    private void navigateFromCamera(String actionType) {
         switch (actionType) {
             case "addwatermark":
-                navController.navigate(R.id.action_watermarkFragment_to_previewFragment);
+                navController.navigate(R.id.action_cameraFragment_to_watermarkFragment);
                 break;
 
             case "combinepdf":
-                navController.navigate(R.id.action_combinePdfFragment_to_previewFragment);
+                navController.navigate(R.id.action_cameraFragment_to_combinePdfFragment);
                 break;
 
             case "convertpdf":
-                navController.navigate(R.id.action_imageToPdfFragment_to_previewFragment);
+                navController.navigate(R.id.action_cameraFragment_to_imageToPdfFragment);
+                break;
+        }
+    }
+
+    private void navigateFromFileManager(String actionType) {
+        switch (actionType) {
+            case "addwatermark":
+                navController.navigate(R.id.action_fileManagerFragment_to_watermarkFragment);
                 break;
 
-            default:
-                // Handle unexpected actionType (optional)
+            case "combinepdf":
+                navController.navigate(R.id.action_fileManagerFragment_to_combinePdfFragment);
+                break;
+
+            case "convertpdf":
+                navController.navigate(R.id.action_fileManagerFragment_to_imageToPdfFragment);
                 break;
         }
     }
 
     /**
-     * Navigate to ShareFragment.
+     * Navigate to PreviewFragment after processing is complete.
+     */
+    private void navToPreview() {
+        navController.navigate(R.id.action_watermarkFragment_to_previewFragment);
+    }
+
+    /**
+     * Navigate to ShareFragment from PreviewFragment.
      */
     private void navToShare() {
         navController.navigate(R.id.action_previewFragment_to_shareFragment);
@@ -190,6 +168,6 @@ public class CoreActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        coreViewModel.clearState(); // Clear only non-persistent states
+        coreViewModel.clearState();
     }
 }

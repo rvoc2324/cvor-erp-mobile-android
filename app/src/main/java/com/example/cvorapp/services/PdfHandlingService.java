@@ -2,8 +2,6 @@ package com.example.cvorapp.services;
 
 import android.content.Context;
 import android.net.Uri;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 
 import org.apache.pdfbox.multipdf.PDFMergerUtility;
@@ -20,20 +18,30 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-public class PDFHandlingService {
+public class PdfHandlingService {
 
     // Combine multiple PDFs into one
     public File combinePDF(@NonNull List<Uri> inputFiles, @NonNull File outputFile, @NonNull Context context) throws Exception {
         PDFMergerUtility mergerUtility = new PDFMergerUtility();
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
         for (Uri uri : inputFiles) {
             PDDocument document = null;
             try (InputStream inputStream = context.getContentResolver().openInputStream(uri)) {
-                document = PDDocument.load(inputStream);
-                if (document.isEncrypted()) {
-                    document = decryptPDF(document, context);
+                try {
+                    // Attempt to load the PDF document
+                    document = PDDocument.load(inputStream);
+                } catch (IOException e) {
+                    // If the document is password-protected, an IOException will be thrown
+                    if (e.getMessage().contains("password") && inputStream != null) {
+                        // Attempt to decrypt the document after catching the IOException
+                        document = decryptPDF(inputStream, context);
+                    } else {
+                        // If the exception is not related to encryption, rethrow it
+                        throw e;
+                    }
                 }
+
+                // Add the document to the merger utility if it's valid
                 if (document != null) {
                     ByteArrayOutputStream decryptedStream = new ByteArrayOutputStream();
                     document.save(decryptedStream);
@@ -42,10 +50,11 @@ public class PDFHandlingService {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                throw new IOException("Failed to process file: " + uri.toString());
+                throw new IOException("Failed to process file: " + uri.toString(), e);
             }
         }
 
+        // Set the destination file and merge the documents
         mergerUtility.setDestinationFileName(outputFile.getPath());
         mergerUtility.mergeDocuments(null);
         return outputFile;
@@ -82,23 +91,21 @@ public class PDFHandlingService {
     }
 
     // Decrypt a PDF document if it's password protected
-    private PDDocument decryptPDF(@NonNull PDDocument document, @NonNull Context context) throws Exception {
-        if (document.isEncrypted()) {
-            String password = promptForPassword(context);
-            if (password == null || password.isEmpty()) {
-                throw new IOException("Password is required to decrypt the PDF.");
-            }
-
-            try {
-                document = PDDocument.load(document, password);
-                if (document.isEncrypted()) {
-                    document.setAllSecurityToBeRemoved(true);
-                }
-            } catch (Exception e) {
-                throw new IOException("Failed to decrypt PDF with the provided password.");
-            }
+    public PDDocument decryptPDF(@NonNull InputStream inputStream, @NonNull Context context) throws Exception {
+        PDDocument decryptedDocument = null;
+        String password = promptForPassword(context);
+        if (password == null || password.isEmpty()) {
+            throw new IOException("Password is required to decrypt the PDF.");
         }
-        return document;
+        try {
+            decryptedDocument = PDDocument.load(inputStream, password);
+            if (decryptedDocument.isEncrypted()) {
+                decryptedDocument.setAllSecurityToBeRemoved(true);
+            }
+        } catch (Exception e) {
+            throw new IOException("Failed to decrypt PDF with the provided password.");
+        }
+        return decryptedDocument;
     }
 
     // Prompt the user for a password

@@ -43,9 +43,9 @@
             android:value="converttopdf" />
     </action>
 
-    <!-- Learn More Activity: Displays additional app information -->
+    <!-- Whats New Activity -->
     <activity
-        android:id="@+id/learnMoreActivity"
-        android:name="com.example.cvorapp.ui.activities.learnmore.LearnMoreActivity"
-        android:label="Learn More Activity" />
+        android:id="@+id/whatsnewActivity"
+        android:name="com.example.cvorapp.ui.activities.whatsnew.WhatsNewActivity"
+        android:label="Whats New Activity" />
 </navigation>

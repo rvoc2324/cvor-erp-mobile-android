@@ -20,8 +20,8 @@ import com.example.cvorapp.viewmodels.CoreViewModel;
 
 /**
  * FileManagerFragment
- * Automatically launches a system file picker for the user to select a file.
- * On file selection, updates the CoreViewModel with the selected file's Uri.
+ * Automatically launches a system file picker for the user to select files.
+ * On file selection, updates the CoreViewModel with the selected file URIs and sets a navigation event.
  */
 public class FileManagerFragment extends Fragment {
 
@@ -45,12 +45,21 @@ public class FileManagerFragment extends Fragment {
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == android.app.Activity.RESULT_OK && result.getData() != null) {
-                        Uri fileUri = result.getData().getData();
-                        if (fileUri != null) {
-                            handleSelectedFile(fileUri);
-                        } else {
-                            Toast.makeText(requireContext(), "No file selected", Toast.LENGTH_SHORT).show();
+                        Intent data = result.getData();
+
+                        // Handle multiple or single file selection
+                        if (data.getClipData() != null) {
+                            int itemCount = data.getClipData().getItemCount();
+                            for (int i = 0; i < itemCount; i++) {
+                                Uri fileUri = data.getClipData().getItemAt(i).getUri();
+                                handleSelectedFile(fileUri);
+                            }
+                        } else if (data.getData() != null) {
+                            handleSelectedFile(data.getData());
                         }
+
+                        // Navigate to action screen after processing all files
+                        coreViewModel.setNavigationEvent("navigate_to_action");
                     } else {
                         Toast.makeText(requireContext(), "File selection cancelled", Toast.LENGTH_SHORT).show();
                     }
@@ -83,6 +92,7 @@ public class FileManagerFragment extends Fragment {
             // Use Photo Picker API for Android 14+
             Intent intent = new Intent(Intent.ACTION_PICK);
             intent.setType("*/*");
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true); // Enable multiple file selection
             filePickerLauncher.launch(intent);
         } else if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
                 == android.content.pm.PackageManager.PERMISSION_GRANTED) {
@@ -90,6 +100,7 @@ public class FileManagerFragment extends Fragment {
             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
             intent.setType("*/*");
             intent.addCategory(Intent.CATEGORY_OPENABLE);
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true); // Enable multiple file selection
             filePickerLauncher.launch(intent);
         } else {
             // Request permission for older versions
@@ -104,34 +115,10 @@ public class FileManagerFragment extends Fragment {
      */
     private void handleSelectedFile(@NonNull Uri fileUri) {
         try {
-            String fileName = getFileName(fileUri);
-            coreViewModel.setSelectedFileUri(fileUri);
-            // Toast.makeText(requireContext(), "File selected: " + fileName, Toast.LENGTH_SHORT).show();
-            // requireActivity().getOnBackPressedDispatcher().onBackPressed(); // Navigate back after selection
+            coreViewModel.addSelectedFileUri(fileUri); // Save the selected file in the CoreViewModel
         } catch (Exception e) {
             Log.e(TAG, "Error handling file: " + e.getMessage(), e);
             Toast.makeText(requireContext(), "Failed to process the selected file", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    /**
-     * Extracts the display name of the file from its Uri.
-     *
-     * @param uri The Uri of the file.
-     * @return The file's name, or a placeholder if unavailable.
-     */
-    private String getFileName(@NonNull Uri uri) {
-        String fileName = "Unknown";
-        try (android.database.Cursor cursor = requireContext().getContentResolver().query(uri, null, null, null, null)) {
-            if (cursor != null && cursor.moveToFirst()) {
-                int nameIndex = cursor.getColumnIndex(android.provider.OpenableColumns.DISPLAY_NAME);
-                if (nameIndex != -1) {
-                    fileName = cursor.getString(nameIndex);
-                }
-            }
-        } catch (Exception e) {
-            Log.e(TAG, "Error retrieving file name: " + e.getMessage(), e);
-        }
-        return fileName;
     }
 }

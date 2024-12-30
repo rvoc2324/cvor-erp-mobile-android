@@ -1,4 +1,4 @@
-package com.example.cvorapp.ui.activities.learnmore;
+package com.example.cvorapp.ui.activities.whatsnew;
 
 import android.os.Bundle;
 import android.widget.TextView;
@@ -11,7 +11,7 @@ import com.example.cvorapp.R;
  * This activity provides additional information about the CVOR platform,
  * including its vision, goals, and objectives.
  */
-public class LearnMoreActivity extends AppCompatActivity {
+public class WhatsNewActivity extends AppCompatActivity {
 
     // TextView to display information
     private TextView tvAppDetails;
@@ -19,7 +19,7 @@ public class LearnMoreActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_learn_more);
+        setContentView(R.layout.activity_whats_new);
 
         // Initialize the UI components
         initUI();
