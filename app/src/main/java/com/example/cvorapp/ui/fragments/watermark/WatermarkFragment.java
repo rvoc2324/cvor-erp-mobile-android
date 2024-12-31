@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.cvorapp.R;
-import com.example.cvorapp.services.PDFHandlingService;
+import com.example.cvorapp.services.PdfHandlingService;
 import com.example.cvorapp.services.WatermarkService;
 import com.example.cvorapp.viewmodels.CoreViewModel;
 import com.example.cvorapp.viewmodels.WatermarkViewModel;
@@ -121,7 +121,7 @@ public class WatermarkFragment extends Fragment {
 
                 Toast.makeText(requireContext(), "Watermarking completed.", Toast.LENGTH_SHORT).show();
                 // Navigate to PreviewFragment
-                coreViewModel.setNavigationEvent("navigate_to_action");
+                coreViewModel.setNavigationEvent("navigate_to_preview");
             } catch (Exception e) {
                 Toast.makeText(requireContext(), "Error processing files: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }

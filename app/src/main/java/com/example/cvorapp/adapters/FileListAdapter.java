@@ -28,6 +28,15 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.FileVi
         notifyDataSetChanged();
     }
 
+    public void moveItem(int fromPosition, int toPosition) {
+        if (fileUris != null && fromPosition >= 0 && toPosition >= 0 &&
+                fromPosition < fileUris.size() && toPosition < fileUris.size()) {
+            Uri movedUri = fileUris.remove(fromPosition);
+            fileUris.add(toPosition, movedUri);
+            notifyItemMoved(fromPosition, toPosition);
+        }
+    }
+
     @NonNull
     @Override
     public FileViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

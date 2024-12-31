@@ -1,7 +1,6 @@
 package com.example.cvorapp.adapters;
 
-import android.content.Context;
-import android.net.Uri;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,45 +15,40 @@ import java.util.List;
 
 public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewViewHolder> {
 
-    private final List<Uri> fileUris;
-    private final Context context;
+    private final List<Bitmap> pageBitmaps;
 
-    public PreviewAdapter(List<Uri> fileUris, Context context) {
-        this.fileUris = fileUris;
-        this.context = context;
+    // Constructor
+    public PreviewAdapter(List<Bitmap> pageBitmaps) {
+        this.pageBitmaps = pageBitmaps;
     }
 
     @NonNull
     @Override
     public PreviewViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_preview, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_preview_page, parent, false);
         return new PreviewViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull PreviewViewHolder holder, int position) {
-        Uri uri = fileUris.get(position);
+        Bitmap pageBitmap = pageBitmaps.get(position);
 
-        if (uri.toString().endsWith(".pdf")) {
-            // Display PDF icon or first page preview
-            holder.filePreviewImageView.setImageResource(R.drawable.ic_pdf_preview);
-        } else {
-            // Display image thumbnail
-            holder.filePreviewImageView.setImageURI(uri);
-        }
+        // Bind the bitmap to the ImageView using efficient memory management
+        holder.pageImageView.setImageBitmap(pageBitmap);
     }
 
     @Override
     public int getItemCount() {
-        return fileUris.size();
+        return pageBitmaps.size();
     }
 
-    public static class PreviewViewHolder extends RecyclerView.ViewHolder {
-        ImageView filePreviewImageView;
+    // ViewHolder class for managing each preview page
+    static class PreviewViewHolder extends RecyclerView.ViewHolder {
+        ImageView pageImageView;
 
         public PreviewViewHolder(@NonNull View itemView) {
             super(itemView);
-            filePreviewImageView = itemView.findViewById(R.id.file_preview_image_view);
+            pageImageView = itemView.findViewById(R.id.preview_image_view);
         }
     }
 }

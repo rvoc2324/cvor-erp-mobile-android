@@ -2,6 +2,8 @@ package com.example.cvorapp.services;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import org.apache.pdfbox.multipdf.PDFMergerUtility;
@@ -25,14 +27,14 @@ public class PdfHandlingService {
         PDFMergerUtility mergerUtility = new PDFMergerUtility();
 
         for (Uri uri : inputFiles) {
-            PDDocument document = null;
+            PDDocument document;
             try (InputStream inputStream = context.getContentResolver().openInputStream(uri)) {
                 try {
                     // Attempt to load the PDF document
                     document = PDDocument.load(inputStream);
                 } catch (IOException e) {
                     // If the document is password-protected, an IOException will be thrown
-                    if (e.getMessage().contains("password") && inputStream != null) {
+                    if (e.getMessage() != null && e.getMessage().contains("password") && inputStream != null) {
                         // Attempt to decrypt the document after catching the IOException
                         document = decryptPDF(inputStream, context);
                     } else {
@@ -49,7 +51,7 @@ public class PdfHandlingService {
                     mergerUtility.addSource(new ByteArrayInputStream(decryptedStream.toByteArray()));
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e("PdfHandlingService", "Error processing file", e);
                 throw new IOException("Failed to process file: " + uri.toString(), e);
             }
         }
@@ -80,7 +82,7 @@ public class PdfHandlingService {
                         contentStream.drawImage(pdImage, 0, 0, pdImage.getWidth(), pdImage.getHeight());
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Log.e("PdfHandlingService", "Error processing file", e);
                     throw new IOException("Failed to process image: " + uri.toString());
                 }
             }
@@ -92,20 +94,21 @@ public class PdfHandlingService {
 
     // Decrypt a PDF document if it's password protected
     public PDDocument decryptPDF(@NonNull InputStream inputStream, @NonNull Context context) throws Exception {
-        PDDocument decryptedDocument = null;
+
         String password = promptForPassword(context);
         if (password == null || password.isEmpty()) {
             throw new IOException("Password is required to decrypt the PDF.");
         }
         try {
-            decryptedDocument = PDDocument.load(inputStream, password);
+            PDDocument decryptedDocument = PDDocument.load(inputStream, password);
             if (decryptedDocument.isEncrypted()) {
                 decryptedDocument.setAllSecurityToBeRemoved(true);
             }
+            return decryptedDocument;
         } catch (Exception e) {
             throw new IOException("Failed to decrypt PDF with the provided password.");
         }
-        return decryptedDocument;
+
     }
 
     // Prompt the user for a password
