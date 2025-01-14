@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.cvorapp">
+    package="com.rvoc.cvorapp">
 
     <!-- Permissions -->
     <!-- Storage permissions -->
@@ -30,7 +30,7 @@
 
 
     <application
-        android:name=".MyApplication"
+        android:name="com.rvoc.cvorapp.MyApplication"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -39,7 +39,7 @@
 
         <!-- HomeActivity defined as the entry point -->
         <activity
-            android:name=".ui.activities.home.HomeActivity"
+            android:name="com.rvoc.cvorapp.ui.activities.home.HomeActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -49,7 +49,7 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.example.cvorapp.fileprovider"
+            android:authorities="com.rvoc.cvorapp.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

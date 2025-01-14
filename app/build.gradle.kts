@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.cvorapp"
+    namespace = "com.rvoc.cvorapp"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.cvorapp"
+        applicationId = "com.rvoc.cvorapp"
         minSdk = 24
         targetSdk = 35
         versionCode = 1

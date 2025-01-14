@@ -6,13 +6,13 @@
     <!-- HomeActivity -->
     <activity
         android:id="@+id/homeActivity"
-        android:name="com.example.cvorapp.ui.activities.home.HomeActivity"
+        android:name="com.rvoc.cvorapp.ui.activities.home.HomeActivity"
         android:label="Home" />
 
     <!-- CoreActivity -->
     <activity
         android:id="@+id/coreActivity"
-        android:name="com.example.cvorapp.ui.activities.core.CoreActivity">
+        android:name="com.rvoc.cvorapp.ui.activities.core.CoreActivity">
         <argument
             android:name="actionType"
             app:argType="string" />
@@ -46,6 +46,6 @@
     <!-- Whats New Activity -->
     <activity
         android:id="@+id/whatsnewActivity"
-        android:name="com.example.cvorapp.ui.activities.whatsnew.WhatsNewActivity"
+        android:name="com.rvoc.cvorapp.ui.activities.whatsnew.WhatsNewActivity"
         android:label="Whats New Activity" />
 </navigation>
