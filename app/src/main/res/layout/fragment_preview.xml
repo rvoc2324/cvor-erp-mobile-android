@@ -19,6 +19,7 @@
     <!-- Button group for navigation actions -->
     <LinearLayout
         android:id="@+id/button_group"
+        style="?android:attr/buttonBarStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -29,19 +30,21 @@
         android:layout_marginTop="8dp">
 
         <Button
-            android:id="@+id/back_button"
+            android:id="@+id/back_button" style="?android:attr/buttonBarButtonStyle"
+            android:backgroundTint="@color/buttonSecondary"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_margin="8dp"
-            android:text="Back" />
+            android:text="@string/back_button" />
 
         <Button
-            android:id="@+id/share_button"
+            android:id="@+id/share_button" style="?android:attr/buttonBarButtonStyle"
+            android:backgroundTint="@color/buttonPrimary"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_margin="8dp"
-            android:text="Share" />
+            android:text="@string/share_button" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

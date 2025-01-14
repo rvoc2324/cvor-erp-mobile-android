@@ -8,15 +8,13 @@ import android.graphics.Paint;
 import android.net.Uri;
 import android.util.Log;
 
-import com.example.cvorapp.models.WatermarkOptions;
-
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
-import org.apache.pdfbox.pdmodel.graphics.state.PDExtendedGraphicsState;
-import org.apache.pdfbox.pdmodel.graphics.color.PDColor;
-import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB;
+import com.tom_roush.pdfbox.pdmodel.PDDocument;
+import com.tom_roush.pdfbox.pdmodel.PDPage;
+import com.tom_roush.pdfbox.pdmodel.PDPageContentStream;
+import com.tom_roush.pdfbox.pdmodel.font.PDType1Font;
+import com.tom_roush.pdfbox.pdmodel.graphics.state.PDExtendedGraphicsState;
+import com.tom_roush.pdfbox.pdmodel.graphics.color.PDColor;
+import com.tom_roush.pdfbox.pdmodel.graphics.color.PDDeviceRGB;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -33,13 +31,12 @@ public class WatermarkService {
      * Applies a watermark to an image file (JPEG/PNG).
      *
      * @param inputUri The Uri of the input image file.
-     * @param options  The watermark options containing the text.
+     * @param watermarkText  The watermark text.
      * @param context  The application context.
      * @return The watermarked image file.
      * @throws Exception If there are errors in processing the file.
      */
-    public File applyWatermarkImage(Uri inputUri, WatermarkOptions options, Context context) throws Exception {
-        String watermarkText = options.generateWatermarkText();
+    public File applyWatermarkImage(Uri inputUri,  String watermarkText, Context context) throws Exception {
         File outputFile = new File(context.getCacheDir(), "watermarked_image.png");
 
         try (InputStream inputStream = context.getContentResolver().openInputStream(inputUri)) {
@@ -87,13 +84,12 @@ public class WatermarkService {
      * Applies a watermark to a PDF file.
      *
      * @param inputUri The Uri of the input PDF file.
-     * @param options  The watermark options containing the text.
+     * @param watermarkText  The watermark text.
      * @param context  The application context.
      * @return The watermarked PDF file.
      * @throws Exception If there are errors in processing the file.
      */
-    public File applyWatermarkPDF(Uri inputUri, WatermarkOptions options, Context context) throws Exception {
-        String watermarkText = options.generateWatermarkText();
+    public File applyWatermarkPDF(Uri inputUri, String watermarkText, Context context) throws Exception {
         File outputFile = new File(context.getCacheDir(), "watermarked_document.pdf");
         PdfHandlingService pdfHandlingService = new PdfHandlingService();
 

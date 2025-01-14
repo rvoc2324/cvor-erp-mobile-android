@@ -74,12 +74,18 @@ public class WatermarkFragment extends Fragment {
             try {
                 for (Uri selectedFileUri : selectedFileUris) {
                     String fileType = requireContext().getContentResolver().getType(selectedFileUri);
+                    String watermarkText = watermarkViewModel.getWatermarkText().getValue();
+                    if (watermarkText == null || watermarkText.isEmpty()) {
+                        // Handle the case where watermark text is unavailable
+                        throw new IllegalStateException("Watermark text is not set.");
+                    }
 
                     if (fileType != null && fileType.equals("application/pdf")) {
                         try {
+
                             File watermarkedPDF = watermarkService.applyWatermarkPDF(
                                     selectedFileUri,
-                                    watermarkViewModel.getOptions(),
+                                    watermarkText,
                                     requireContext()
                             );
 
@@ -94,7 +100,7 @@ public class WatermarkFragment extends Fragment {
                             // Handle image watermarking
                             File watermarkedImage = watermarkService.applyWatermarkImage(
                                     selectedFileUri,
-                                    watermarkViewModel.getOptions(),
+                                    watermarkText,
                                     requireContext()
                             );
 

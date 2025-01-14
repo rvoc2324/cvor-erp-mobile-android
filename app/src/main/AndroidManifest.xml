@@ -58,8 +58,9 @@
         </provider>
 
         <!-- Additional activities
-        <activity android:name=".ui.activities.LearnMoreActivity" />
-        <activity android:name=".ui.activities.FileDetailsActivity" /> -->
+        <activity android:name=".ui.activities.WhatsNewActivity" />
+        <activity android:name=".ui.activities.ShareHistoryActivity" />
+        <activity android:name=".ui.activities.ManageFilesActivity" /> -->
 
         <!-- Backup configuration -->
         <meta-data

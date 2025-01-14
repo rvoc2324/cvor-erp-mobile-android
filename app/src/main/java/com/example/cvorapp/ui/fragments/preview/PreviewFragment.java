@@ -1,6 +1,7 @@
-package com.example.cvorapp.fragments;
+package com.example.cvorapp.ui.fragments.preview;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,10 +11,7 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,7 +19,9 @@ import com.example.cvorapp.R;
 import com.example.cvorapp.adapters.PreviewAdapter;
 import com.example.cvorapp.viewmodels.CoreViewModel;
 
+import java.io.File;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PreviewFragment extends Fragment {
 
@@ -47,21 +47,24 @@ public class PreviewFragment extends Fragment {
         previewRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
         // Observe the processed file's pages and update UI
-        coreViewModel.getProcessedFilePages().observe(getViewLifecycleOwner(), new Observer<List<Bitmap>>() {
-            @Override
-            public void onChanged(List<Bitmap> bitmaps) {
-                previewAdapter = new PreviewAdapter(bitmaps);
-                previewRecyclerView.setAdapter(previewAdapter);
+        coreViewModel.getProcessedFiles().observe(getViewLifecycleOwner(), files -> {
+            if (files != null) {
+                List<Bitmap> bitmaps = files.stream()
+                        .map(this::convertFileToBitmap)
+                        .collect(Collectors.toList());
+
+                previewAdapter.updateData(bitmaps);
             }
         });
 
         // Back button navigation
-        backButton.setOnClickListener(v -> requireActivity().onBackPressed());
+        backButton.setOnClickListener(v -> requireActivity().getOnBackPressedDispatcher().onBackPressed());
 
         // Share button navigation
-        shareButton.setOnClickListener(v -> {
-            NavController navController = Navigation.findNavController(view);
-            navController.navigate(R.id.action_previewFragment_to_shareFragment);
-        });
+        shareButton.setOnClickListener(v -> coreViewModel.setNavigationEvent("navigate_to_share"));
+    }
+
+    private Bitmap convertFileToBitmap(File file) {
+        return BitmapFactory.decodeFile(file.getAbsolutePath());
     }
 }

@@ -7,7 +7,9 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.cvorapp.models.WatermarkOptions;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * ViewModel for managing state and logic in WatermarkFragment.
@@ -18,8 +20,6 @@ public class WatermarkViewModel extends AndroidViewModel {
     private final MutableLiveData<String> purpose = new MutableLiveData<>();
     private final MutableLiveData<String> generatedWatermarkText = new MutableLiveData<>();
 
-    private WatermarkOptions options;
-
     public WatermarkViewModel(@NonNull Application application) {
         super(application);
     }
@@ -27,15 +27,23 @@ public class WatermarkViewModel extends AndroidViewModel {
     public void setInputs(String organizationName, String purpose) {
         this.shareWith.setValue(organizationName);
         this.purpose.setValue(purpose);
-        this.options = new WatermarkOptions(organizationName, purpose);
-        generatedWatermarkText.setValue(options.generateWatermarkText());
+
+        String watermarkText = "Shared with " + organizationName +
+                " for " + (purpose == null || purpose.isEmpty() ? "general purposes" : purpose) +
+                " on " + new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
+
+        generatedWatermarkText.setValue(watermarkText);
     }
 
-    public LiveData<String> getGeneratedWatermarkText() {
+    public LiveData<String> getShareWith() {
+        return shareWith;
+    }
+
+    public LiveData<String> getPurpose() {
+        return purpose;
+    }
+
+    public LiveData<String> getWatermarkText() {
         return generatedWatermarkText;
-    }
-
-    public WatermarkOptions getOptions() {
-        return options;
     }
 }

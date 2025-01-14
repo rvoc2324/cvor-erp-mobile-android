@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate; // For Theme management
 import androidx.work.Configuration; // For WorkManager configuration
 import androidx.work.WorkManager; // WorkManager instance
+import com.tom_roush.pdfbox.android.PDFBoxResourceLoader;
 
 @HiltAndroidApp // Marks this class as the entry point for Hilt Dependency Injection
 public class MyApplication extends Application implements Configuration.Provider {
@@ -22,6 +23,7 @@ public class MyApplication extends Application implements Configuration.Provider
         initWorkManager();
         initCrashlytics();
         initLogging();
+        PDFBoxResourceLoader.init(getApplicationContext());
 
         Log.d("MyApplication", "Application initialized successfully.");
     }

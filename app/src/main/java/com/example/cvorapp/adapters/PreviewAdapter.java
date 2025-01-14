@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cvorapp.R;
 
+import java.util.Collections;
 import java.util.List;
 
 public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewViewHolder> {
@@ -19,7 +20,7 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewV
 
     // Constructor
     public PreviewAdapter(List<Bitmap> pageBitmaps) {
-        this.pageBitmaps = pageBitmaps;
+        this.pageBitmaps = pageBitmaps != null ? pageBitmaps : Collections.emptyList();
     }
 
     @NonNull
@@ -42,8 +43,20 @@ public class PreviewAdapter extends RecyclerView.Adapter<PreviewAdapter.PreviewV
         return pageBitmaps.size();
     }
 
+    /**
+     * Update the data and refresh the adapter.
+     * @param newPageBitmaps New list of bitmaps to update the adapter with.
+     */
+    public void updateData(List<Bitmap> newPageBitmaps) {
+        pageBitmaps.clear();
+        if (newPageBitmaps != null) {
+            pageBitmaps.addAll(newPageBitmaps);
+        }
+        notifyDataSetChanged();
+    }
+
     // ViewHolder class for managing each preview page
-    static class PreviewViewHolder extends RecyclerView.ViewHolder {
+    public static class PreviewViewHolder extends RecyclerView.ViewHolder {
         ImageView pageImageView;
 
         public PreviewViewHolder(@NonNull View itemView) {

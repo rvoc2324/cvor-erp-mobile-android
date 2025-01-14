@@ -65,7 +65,7 @@ dependencies {
     implementation(libs.camerax.view)
 
     //PDF Libraries
-    implementation(libs.pdfbox)
+    implementation(libs.pdfbox.android)
 
     // Room Database
     implementation(libs.room.runtime)
