@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary">
+    android:background="@drawable/gradient_primary">
 
     <!-- Toolbar with header text -->
     <androidx.appcompat.widget.Toolbar
@@ -18,8 +18,8 @@
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nav_host_fragment_home"
         android:name="androidx.navigation.fragment.NavHostFragment"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:defaultNavHost="true"
         app:navGraph="@navigation/nav_graph_home" />
 
@@ -29,6 +29,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="16dp"
+        android:layout_below="@id/toolbar"
         android:background="@drawable/rounded_bottom_border">
 
         <!-- Animated text for the slogan -->
@@ -37,11 +38,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="24dp"
-            android:text="@string/app_slogan"
+            android:layout_marginBottom="32dp"
             android:textSize="18sp"
             android:textColor="@color/text"
             android:gravity="center" />
+            <!-- android:text="@string/app_slogan" -->
 
         <!-- Primary action: Add Watermark button -->
         <Button

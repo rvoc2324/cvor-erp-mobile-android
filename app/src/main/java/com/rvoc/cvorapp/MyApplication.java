@@ -20,7 +20,7 @@ public class MyApplication extends Application implements Configuration.Provider
 
         // Initialize application-wide configurations here
         initAppTheme();
-        initWorkManager();
+        // initWorkManager();
         initCrashlytics();
         initLogging();
         PDFBoxResourceLoader.init(getApplicationContext());

@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Toolbar Style -->
+    <!-- Toolbar Styles -->
     <style name="ToolbarStyle" parent="Widget.MaterialComponents.Toolbar.Primary">
         <item name="android:background">@color/colorPrimary</item>
         <item name="android:titleTextColor">@color/white</item>
         <item name="android:subtitleTextColor">@color/text</item>
+    </style>
+
+    <style name="ToolbarStyle.Transparent" parent="Widget.MaterialComponents.Toolbar">
+        <item name="android:background">#00000000</item>
+        <item name="android:titleTextColor">@color/white</item>
+        <item name="android:subtitleTextColor">@color/textSecondary</item>
     </style>
 
     <!-- Button Styles -->
@@ -19,23 +25,64 @@
         <item name="android:textColor">@color/text</item>
     </style>
 
+    <style name="DisabledButtonStyle" parent="Widget.MaterialComponents.Button">
+        <item name="android:backgroundTint">@color/buttonDisabled</item>
+        <item name="android:textColor">@color/textDisabled</item>
+    </style>
+
+    <style name="TextButtonStyle" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textColor">@color/buttonPrimary</item>
+    </style>
+
     <!-- Text Styles -->
     <style name="TextStyle">
         <item name="android:textColor">@color/text</item>
         <item name="android:textSize">20sp</item>
-        <item name="fontFamily">sans-serif</item>
+        <item name="fontFamily">poppins</item>
     </style>
 
     <style name="TextStyle.Headline">
         <item name="android:textColor">@color/text</item>
-        <item name="android:textSize">20sp</item>
-        <item name="fontFamily">sans-serif</item>
+        <item name="android:textSize">24sp</item>
+        <item name="fontFamily">poppins</item>
     </style>
 
     <style name="TextStyle.Body">
         <item name="android:textColor">@color/text</item>
         <item name="android:textSize">16sp</item>
-        <item name="fontFamily">sans-serif</item>
+        <item name="fontFamily">poppins</item>
     </style>
 
+    <style name="TextStyle.Label">
+        <item name="android:textColor">@color/textSecondary</item>
+        <item name="android:textSize">14sp</item>
+        <item name="fontFamily">poppins</item>
+    </style>
+
+    <style name="TextStyle.Caption">
+        <item name="android:textColor">@color/textSubdued</item>
+        <item name="android:textSize">12sp</item>
+        <item name="fontFamily">poppins</item>
+    </style>
+
+    <!-- App Theme -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
+        <item name="android:navigationBarColor">@color/colorPrimaryDark</item>
+    </style>
+
+    <!-- Container Styles -->
+    <style name="CardStyle">
+        <item name="android:background">@color/fragment1Background</item>
+        <item name="android:elevation">4dp</item>
+        <item name="android:padding">16dp</item>
+    </style>
+
+    <style name="DialogStyle" parent="Theme.MaterialComponents.Dialog">
+        <item name="android:background">@color/fragment2Background</item>
+        <item name="android:textColor">@color/text</item>
+    </style>
 </resources>
