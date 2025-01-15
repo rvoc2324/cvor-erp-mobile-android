@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.rvoc.cvorapp.R;
 
 /**
- * LearnMoreActivity
+ * WhatsNewActivity
  * This activity provides additional information about the CVOR platform,
  * including its vision, goals, and objectives.
  */

@@ -121,11 +121,8 @@ public class CoreActivity extends AppCompatActivity {
                 break;
 
             case "combinepdf":
-                navController.navigate(R.id.action_cameraFragment_to_combinePdfFragment);
-                break;
-
             case "convertpdf":
-                navController.navigate(R.id.action_cameraFragment_to_imageToPdfFragment);
+                navController.navigate(R.id.action_cameraFragment_to_PdfHandlingFragment);
                 break;
         }
     }
@@ -137,11 +134,8 @@ public class CoreActivity extends AppCompatActivity {
                 break;
 
             case "combinepdf":
-                navController.navigate(R.id.action_fileManagerFragment_to_combinePdfFragment);
-                break;
-
             case "convertpdf":
-                navController.navigate(R.id.action_fileManagerFragment_to_imageToPdfFragment);
+                navController.navigate(R.id.action_fileManagerFragment_to_PdfHandlingFragment);
                 break;
         }
     }

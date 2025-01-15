@@ -48,6 +48,7 @@ dependencies {
     // Core Libraries
     implementation(libs.appcompat)
     implementation(libs.material)
+    implementation(libs.splashscreen)
     implementation(libs.constraintlayout)
 
     // Lifecycle Components

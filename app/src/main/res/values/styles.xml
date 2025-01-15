@@ -38,40 +38,31 @@
     <style name="TextStyle">
         <item name="android:textColor">@color/text</item>
         <item name="android:textSize">20sp</item>
-        <item name="fontFamily">poppins</item>
+        <item name="android:fontFamily">@font/poppins</item>
     </style>
 
     <style name="TextStyle.Headline">
         <item name="android:textColor">@color/text</item>
         <item name="android:textSize">24sp</item>
-        <item name="fontFamily">poppins</item>
+        <item name="android:fontFamily">@font/poppins</item>
     </style>
 
     <style name="TextStyle.Body">
         <item name="android:textColor">@color/text</item>
         <item name="android:textSize">16sp</item>
-        <item name="fontFamily">poppins</item>
+        <item name="android:fontFamily">@font/poppins</item>
     </style>
 
     <style name="TextStyle.Label">
         <item name="android:textColor">@color/textSecondary</item>
         <item name="android:textSize">14sp</item>
-        <item name="fontFamily">poppins</item>
+        <item name="android:fontFamily">@font/poppins</item>
     </style>
 
     <style name="TextStyle.Caption">
         <item name="android:textColor">@color/textSubdued</item>
         <item name="android:textSize">12sp</item>
-        <item name="fontFamily">poppins</item>
-    </style>
-
-    <!-- App Theme -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryVariant">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
-        <item name="android:navigationBarColor">@color/colorPrimaryDark</item>
+        <item name="android:fontFamily">@font/poppins</item>
     </style>
 
     <!-- Container Styles -->

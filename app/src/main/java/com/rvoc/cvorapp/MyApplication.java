@@ -3,16 +3,14 @@ package com.rvoc.cvorapp;
 import android.app.Application;
 import android.util.Log;
 
-import dagger.hilt.android.HiltAndroidApp; // For Dependency Injection
-
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate; // For Theme management
-import androidx.work.Configuration; // For WorkManager configuration
 import androidx.work.WorkManager; // WorkManager instance
 import com.tom_roush.pdfbox.android.PDFBoxResourceLoader;
 
+import dagger.hilt.android.HiltAndroidApp; // For Dependency Injection
+
 @HiltAndroidApp // Marks this class as the entry point for Hilt Dependency Injection
-public class MyApplication extends Application implements Configuration.Provider {
+public class MyApplication extends Application {
 
     @Override
     public void onCreate() {
@@ -20,7 +18,6 @@ public class MyApplication extends Application implements Configuration.Provider
 
         // Initialize application-wide configurations here
         initAppTheme();
-        // initWorkManager();
         initCrashlytics();
         initLogging();
         PDFBoxResourceLoader.init(getApplicationContext());
@@ -35,19 +32,6 @@ public class MyApplication extends Application implements Configuration.Provider
     private void initAppTheme() {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         Log.d("MyApplication", "App theme initialized to MODE_NIGHT_NO.");
-    }
-
-    /**
-     * Initialize WorkManager for managing background tasks.
-     */
-    private void initWorkManager() {
-        WorkManager.initialize(
-                this,
-                new Configuration.Builder()
-                        .setMinimumLoggingLevel(Log.INFO) // Set logging level
-                        .build()
-        );
-        Log.d("MyApplication", "WorkManager initialized.");
     }
 
     /**
@@ -75,17 +59,5 @@ public class MyApplication extends Application implements Configuration.Provider
         } catch (Exception e) {
             Log.e("MyApplication", "Logging framework initialization failed.", e);
         }
-    }
-
-    /**
-     * Required implementation for WorkManager Configuration.Provider.
-     * This allows customization of WorkManager configuration.
-     */
-    @NonNull
-    @Override
-    public Configuration getWorkManagerConfiguration() {
-        return new Configuration.Builder()
-                .setMinimumLoggingLevel(Log.DEBUG)
-                .build();
     }
 }

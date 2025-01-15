@@ -38,11 +38,8 @@
             android:id="@+id/action_fileManagerFragment_to_watermarkFragment"
             app:destination="@id/watermarkFragment" />
         <action
-            android:id="@+id/action_fileManagerFragment_to_combinePdfFragment"
-            app:destination="@id/combinePdfFragment" />
-        <action
-            android:id="@+id/action_fileManagerFragment_to_imageToPdfFragment"
-            app:destination="@id/imageToPdfFragment" />
+            android:id="@+id/action_fileManagerFragment_to_PdfHandlingFragment"
+            app:destination="@id/PdfHandlingFragment" />
     </fragment>
 
     <!-- Camera Fragment -->
@@ -55,11 +52,8 @@
             android:id="@+id/action_cameraFragment_to_watermarkFragment"
             app:destination="@id/watermarkFragment" />
         <action
-            android:id="@+id/action_cameraFragment_to_combinePdfFragment"
-            app:destination="@id/combinePdfFragment" />
-        <action
-            android:id="@+id/action_cameraFragment_to_imageToPdfFragment"
-            app:destination="@id/imageToPdfFragment" />
+            android:id="@+id/action_cameraFragment_to_PdfHandlingFragment"
+            app:destination="@id/PdfHandlingFragment" />
     </fragment>
 
     <!-- Watermark Fragment -->
@@ -73,25 +67,14 @@
             app:destination="@id/previewFragment" />
     </fragment>
 
-    <!-- Combine PDF Fragment -->
+    <!-- PDF Handling Fragment -->
     <fragment
-        android:id="@+id/combinePdfFragment"
-        android:name="com.rvoc.cvorapp.ui.fragments.pdf.CombinePdfFragment"
-        android:label="Combine PDF Fragment"
-        tools:layout="@layout/fragment_combine_pdf">
+        android:id="@+id/PdfHandlingFragment"
+        android:name="com.rvoc.cvorapp.ui.fragments.pdf.PdfHandlingFragment"
+        android:label="PDF Handling Fragment"
+        tools:layout="@layout/fragment_pdf_handling">
         <action
-            android:id="@+id/action_combinePdfFragment_to_previewFragment"
-            app:destination="@id/previewFragment" />
-    </fragment>
-
-    <!-- Image to PDF Fragment -->
-    <fragment
-        android:id="@+id/imageToPdfFragment"
-        android:name="com.rvoc.cvorapp.ui.fragments.pdf.ImageToPdfFragment"
-        android:label="Image to PDF Fragment"
-        tools:layout="@layout/fragment_image_to_pdf">
-        <action
-            android:id="@+id/action_imageToPdfFragment_to_previewFragment"
+            android:id="@+id/action_PdfHandlingFragment_to_previewFragment"
             app:destination="@id/previewFragment" />
     </fragment>
 

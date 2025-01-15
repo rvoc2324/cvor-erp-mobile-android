@@ -1,32 +1,20 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- Permissions -->
-    <!-- Storage permissions -->
-    <uses-feature
-        android:name="android.hardware.camera"
-        android:required="false" />
-
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
-    <!-- Camera permission for capturing images -->
     <uses-permission android:name="android.permission.CAMERA" />
-    <!-- Notifications permission for Android 13+ -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <!-- Internet access for file sharing or updates -->
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <!-- Backward compatibility for Android 12 and below
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> -->
-
-    <!-- Required for camera intent visibility -->
+    <!-- Intent Queries -->
     <queries>
         <intent>
             <action android:name="android.media.action.IMAGE_CAPTURE" />
         </intent>
     </queries>
-
-
 
     <application
         android:name="com.rvoc.cvorapp.MyApplication"
@@ -34,7 +22,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/SplashTheme">
 
         <!-- HomeActivity defined as the entry point -->
         <activity
@@ -46,6 +34,11 @@
             </intent-filter>
         </activity>
 
+        <!-- Additional Activities -->
+        <activity android:name="com.rvoc.cvorapp.ui.activities.whatsnew.WhatsNewActivity" android:exported="false" />
+        <activity android:name="com.rvoc.cvorapp.ui.activities.core.CoreActivity" android:exported="false" />
+
+        <!-- FileProvider -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.rvoc.cvorapp.fileprovider"
@@ -55,16 +48,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
-        <!-- Additional activities
-        <activity android:name=".ui.activities.WhatsNewActivity" />
-        <activity android:name=".ui.activities.ShareHistoryActivity" />
-        <activity android:name=".ui.activities.ManageFilesActivity" /> -->
-
-        <!-- Backup configuration -->
-        <meta-data
-            android:name="android.support.FILE_PROVIDER_PATHS"
-            android:resource="@xml/file_paths" />
 
     </application>
 </manifest>
